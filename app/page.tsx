@@ -9,14 +9,33 @@ export default function Home() {
 
       <section className="h-screen flex flex-col justify-center items-center text-center px-6 relative overflow-hidden">
 
-        <div className="absolute opacity-5">
-          <Image
-            src="/logo.PNG"
-            alt="LEOCHI"
-            width={600}
-            height={600}
-          />
-        </div>
+        <div className="absolute inset-0 overflow-hidden">
+
+  <Image
+    src="/Sky.PNG"
+    alt=""
+    width={450}
+    height={450}
+    className="absolute left-[-80px] top-20 opacity-15 blur-md rotate-[-15deg]"
+  />
+
+  <Image
+    src="/PersianRug.PNG"
+    alt=""
+    width={500}
+    height={500}
+    className="absolute right-[-80px] top-24 opacity-15 blur-md rotate-[12deg]"
+  />
+
+  <Image
+    src="/Leochi.PNG"
+    alt=""
+    width={400}
+    height={400}
+    className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 opacity-15 blur-md"
+  />
+
+</div>
 
         <h1 className="text-7xl md:text-8xl font-serif tracking-wide z-10">
           LEOCHI
@@ -29,6 +48,14 @@ export default function Home() {
         <p className="mt-3 text-gray-500 z-10">
           EST. 2019
         </p>
+        <div className="mt-10">
+  <a
+    href="/shop"
+    className="border border-black px-8 py-3 uppercase tracking-[0.3em] text-sm hover:bg-black hover:text-white transition"
+  >
+    View Collection
+  </a>
+</div>
 
       </section>
 
