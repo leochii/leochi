@@ -1,88 +1,97 @@
 import Image from "next/image";
-import Link from "next/link"
+import Link from "next/link";
+
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#fbf7f1] px-10 py-20">
+    <main className="bg-[#fbf7f1]">
 
-      <h1 className="text-5xl font-serif text-center mb-4">
-        Premium Streetwear
-      </h1>
+      {/* HERO */}
 
-      <p className="text-center text-gray-500 mb-16">
-        Timeless designs inspired by culture and craftsmanship.
-      </p>
+      <section className="h-screen flex flex-col justify-center items-center text-center px-6 relative overflow-hidden">
 
-      {/* Products */}
+        <div className="absolute opacity-5">
+          <Image
+            src="/logo.PNG"
+            alt="LEOCHI"
+            width={600}
+            height={600}
+          />
+        </div>
 
-      <div className="grid md:grid-cols-3 gap-10 max-w-7xl mx-auto">
+        <h1 className="text-7xl md:text-8xl font-serif tracking-wide z-10">
+          LEOCHI
+        </h1>
 
-        {/* SkyTee */}
-        <Link href="/shop/products/SkyTee">
-          <div className="bg-white rounded-3xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transition">
+        <p className="mt-6 text-gray-600 text-lg tracking-[0.2em] uppercase z-10">
+          Persian Heritage Reimagined
+        </p>
+
+        <p className="mt-3 text-gray-500 z-10">
+          EST. 2019
+        </p>
+
+      </section>
+
+      {/* BRAND STATEMENT */}
+
+      <section className="max-w-3xl mx-auto px-8 py-32 text-center">
+
+        <h2 className="text-4xl font-serif mb-8">
+          Crafted With Meaning
+        </h2>
+
+        <p className="text-gray-600 leading-8 text-lg">
+          Inspired by Persian heritage and shaped by modern culture,
+          LEOCHI creates timeless garments that bridge tradition,
+          craftsmanship, and contemporary streetwear.
+        </p>
+
+      </section>
+
+      {/* COLLECTION */}
+
+      <section className="max-w-7xl mx-auto px-8 pb-32">
+
+        <h2 className="text-center text-4xl font-serif mb-16">
+          Collection
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-10">
+
+          <Link href="/shop/products/SkyTee">
             <Image
-  src="/Sky.PNG"
-  alt="SkyTee"
-  width={400}
-  height={400}
-  className="rounded-2xl object-cover w-full h-[400px]"
-/>
+              src="/Sky.PNG"
+              alt="Sky"
+              width={500}
+              height={500}
+              className="w-full hover:opacity-90 transition"
+            />
+          </Link>
 
-            <h2 className="text-2xl mt-6">SkyTee</h2>
-
-            <p className="text-gray-500 mt-2">
-              Premium Streetwear Collection
-            </p>
-
-            <p className="mt-4 text-xl">$60 CAD</p>
-          </div>
-        </Link>
-
-
-        {/* PersianRugTee */}
-        <Link href="/shop/products/PersianRugTee">
-          <div className="bg-white rounded-3xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transition">
+          <Link href="/shop/products/PersianRugTee">
             <Image
-  src="/PersianRug.PNG"
-  alt="PersianRugTee"
-  width={400}
-  height={400}
-  className="rounded-2xl object-cover w-full h-[400px]"
-/>
+              src="/PersianRug.PNG"
+              alt="Persian Rug"
+              width={500}
+              height={500}
+              className="w-full hover:opacity-90 transition"
+            />
+          </Link>
 
-            <h2 className="text-2xl mt-6">PersianRugTee</h2>
-
-            <p className="text-gray-500 mt-2">
-              Inspired by Persian Heritage
-            </p>
-
-            <p className="mt-4 text-xl">$60 CAD</p>
-          </div>
-        </Link>
-
-
-        {/* Leochi */}
-        <Link href="/shop/products/Leochi">
-          <div className="bg-white rounded-3xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transition">
+          <Link href="/shop/products/Leochi">
             <Image
-  src="/Leochi.PNG"
-  alt="Leochi"
-  width={400}
-  height={400}
-  className="rounded-2xl object-cover w-full h-[400px]"
-/>
+              src="/Leochi.PNG"
+              alt="Leochi"
+              width={500}
+              height={500}
+              className="w-full hover:opacity-90 transition"
+            />
+          </Link>
 
-            <h2 className="text-2xl mt-6">Leochi</h2>
+        </div>
 
-            <p className="text-gray-500 mt-2">
-              Minimal Essential Collection
-            </p>
+      </section>
 
-            <p className="mt-4 text-xl">$50 CAD</p>
-          </div>
-        </Link>
-
-      </div>
-
-</main>
+    </main>
   );
 }
