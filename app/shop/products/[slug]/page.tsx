@@ -10,7 +10,7 @@ type Props = {
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
 
-  const product = products.find((p) => p.slug === slug);
+  const product = products.find((p) => p.slug === slug) as any;
 
   if (!product) notFound();
 
@@ -33,7 +33,7 @@ export default async function ProductPage({ params }: Props) {
 
             <div className="grid grid-cols-3 gap-4 mt-6">
 
-              {product.images.slice(1).map((image, index) => (
+              {product.images.slice(1).map((image: string, index: number) => (
 
                 <img
                   key={index}
@@ -65,15 +65,15 @@ export default async function ProductPage({ params }: Props) {
 
             <div className="mt-10 space-y-2 text-neutral-400">
 
-              <p>{product.material}</p>
-
-              <p>{product.fit}</p>
+              
 
             </div>
 
-            <p className="mt-12 text-neutral-300 leading-8">
-              {product.description}
-            </p>
+            {product.description && (
+              <p className="mt-12 text-neutral-300 leading-8">
+                {product.description}
+              </p>
+            )}
 
             <div className="mt-14">
 
