@@ -1,61 +1,111 @@
 "use client";
-import Link from "next/link";
-import Image from "next/image";
+
+import Navbar from "../components/navbar";
 import { useCart } from "../context/cartcontext";
 
 export default function CartPage() {
   const { cart, removeFromCart } = useCart();
+
   const total = cart.reduce((sum, item) => sum + item.price, 0);
 
   return (
-    <main className="min-h-screen bg-[#fbf7f1] p-10">
-      <h1 className="text-5xl font-serif mb-10">Cart</h1>
+    <>
+      <Navbar />
 
-      {cart.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <div className="space-y-8">
-          {cart.map((item, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-3xl shadow-lg p-6 flex items-center gap-6"
-            >
-              <Image
-                src={item.image}
-                alt={item.name}
-                width={120}
-                height={120}
-                className="rounded-2xl"
-              />
+      <main className="bg-black text-white min-h-screen pt-28">
 
-              <div className="flex-1">
-                <h2 className="text-2xl">{item.name}</h2>
-                <p className="text-xl mt-2">${item.price} CAD</p>
+        <div className="max-w-6xl mx-auto px-8">
+
+          <h1 className="font-serif text-5xl">
+            Cart
+          </h1>
+
+          <p className="text-neutral-500 mt-2">
+            {cart.length} Item{cart.length !== 1 ? "s" : ""}
+          </p>
+
+          <div className="mt-16">
+
+            {cart.map((item, index) => (
+
+              <div
+                key={index}
+                className="border-b border-neutral-800 py-10 flex justify-between items-start"
+              >
+
+                <div className="flex gap-8">
+
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-36 h-44 object-cover rounded-lg"
+                  />
+
+                  <div>
+
+                    <h2 className="font-serif text-3xl">
+                      {item.name}
+                    </h2>
+
+                    <p className="text-neutral-500 mt-3">
+                      Premium Heavyweight Cotton
+                    </p>
+
+                    <p className="text-neutral-500">
+                      Oversized Fit
+                    </p>
+
+                    <p className="mt-8 text-xl">
+                      CAD ${item.price}
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <button
+                  onClick={() => removeFromCart(index)}
+                  className="text-neutral-500 hover:text-white transition"
+                >
+                  Remove
+                </button>
+
               </div>
 
-              <button
-                onClick={() => removeFromCart(index)}
-                className="bg-black text-white px-6 py-3 rounded-full"
-              >
-                Remove
-              </button>
+            ))}
+
+          </div>
+
+          <div className="mt-16 max-w-md ml-auto">
+
+            <div className="flex justify-between text-lg">
+
+              <span>Subtotal</span>
+
+              <span>CAD ${total}</span>
+
             </div>
-          ))}
-        </div>
-      )}
-      <div className="mt-12 border-t pt-8 flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-serif">
-            Total: ${total} CAD
-          </h2>
+
+            <div className="flex justify-between text-neutral-500 mt-4">
+
+              <span>Shipping</span>
+
+              <span>Calculated at checkout</span>
+
+            </div>
+
+            <button className="mt-10 w-full bg-white text-black py-5 uppercase tracking-[0.3em] hover:bg-neutral-200 transition">
+
+              Checkout
+
+            </button>
+
+          </div>
+
         </div>
 
-        <Link href="/checkout">
-          <button className="bg-black text-white px-8 py-4 rounded-full">
-            Checkout
-          </button>
-        </Link>
-      </div>
-    </main>
+      </main>
+
+    </>
   );
 }

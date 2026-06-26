@@ -1,48 +1,56 @@
+import Navbar from "../components/navbar";
+
 export default function About() {
   return (
-    <main className="min-h-screen max-w-3xl mx-auto px-8 py-16">
+    <>
+      <Navbar />
 
-      <h1 className="text-6xl font-serif mb-3">
-        About LEOCHI
-      </h1>
+      <main className="bg-black text-white min-h-screen">
+        <div className="max-w-5xl mx-auto px-8 pt-32 pb-28">
 
-      <p className="uppercase tracking-[0.3em] text-sm text-gray-500 mb-10">
-        EST. 2019
-      </p>
+          <p className="uppercase tracking-[0.45em] text-xs text-neutral-500">
+            About
+          </p>
 
-      <div className="space-y-6 text-lg leading-8 text-gray-700">
+          <h1 className="font-serif text-6xl mt-5">
+            LEOCHI
+          </h1>
 
-        <p>
-          Founded in 2019, LEOCHI is a premium streetwear label inspired by
-          Persian heritage, timeless design, and modern culture.
-        </p>
+          <p className="mt-12 max-w-2xl text-3xl leading-relaxed">
+            Inspired by Leo.
+          </p>
 
-        <p>
-          Our collections blend traditional influence with contemporary
-          silhouettes, creating pieces that feel both familiar and original.
-          Every release is designed with a focus on quality, simplicity, and
-          lasting wear.
-        </p>
+          <p className="mt-6 max-w-3xl text-lg leading-9 text-neutral-400">
+            LEOCHI is a premium streetwear label inspired by Leo — a loyal
+            companion whose quiet spirit became the heart of our brand.
+          </p>
 
-        <p>
-          At LEOCHI, we believe clothing should carry meaning beyond trends.
-          Each garment reflects a connection to culture, craftsmanship, and
-          personal identity.
-        </p>
+          <div className="mt-20 max-w-3xl space-y-10">
 
-        <p>
-          Built for those who value authenticity, LEOCHI represents a new
-          generation of streetwear shaped by heritage and designed for the
-          future.
-        </p>
+            <p className="text-neutral-300 leading-9">
+              Every collection reflects the values that inspired us from the
+              beginning: loyalty, simplicity, comfort, and timeless design.
+            </p>
 
-      </div>
+            <p className="text-neutral-300 leading-9">
+              We create oversized heavyweight essentials made to be worn for
+              years, not seasons.
+            </p>
 
-      <div className="mt-12 border-t pt-6 text-gray-500">
-        <p>Vancouver, Canada</p>
-        <p>support@leochi.co</p>
-      </div>
+            <p className="text-neutral-300 leading-9">
+              Inspired by Persian culture and crafted in Canada, every piece is
+              designed to feel effortless while carrying a story of warmth,
+              authenticity, and confidence.
+            </p>
 
-    </main>
-  )
+          </div>
+
+          <div className="mt-24 border-t border-neutral-800 pt-8 flex flex-wrap gap-10 text-xs uppercase tracking-[0.3em] text-neutral-500">
+
+          </div>
+
+        </div>
+      </main>
+    </>
+  );
 }

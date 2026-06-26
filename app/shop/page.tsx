@@ -1,79 +1,98 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Shop() {
   return (
-    <main className="min-h-screen bg-[#fbf7f1] px-10 py-20">
-      <h1 className="text-5xl font-serif mb-10">
-        Shop Collection
-      </h1>
+    <main className="bg-black text-white min-h-screen pt-24">
 
-      <div className="grid md:grid-cols-3 gap-10">
+      {/* Navbar */}
 
-        {/* Sky Tee */}
-        <Link href="/shop/products/Sky Tee">
-          <div className="bg-white rounded-3xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transition">
-            <Image
-              src="/Sky.PNG"
-              alt="Sky Tee"
-              width={400}
-              height={400}
-              className="rounded-2xl"
-            />
 
-            <h2 className="text-2xl mt-6">Sky Tee</h2>
+      {/* Title */}
 
-            <p className="text-gray-500 mt-2">
-              Premium Streetwear Collection
-            </p>
+      <section className="text-center py-24">
 
-            <p className="mt-4 text-xl">$50 CAD</p>
-          </div>
-        </Link>
+        <p className="uppercase tracking-[0.4em] text-neutral-500 text-sm">
+          COLLECTION 01
+        </p>
 
-        {/* Persian Rug Tee */}
-        <Link href="/shop/products/PersianRug">
-          <div className="bg-white rounded-3xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transition">
-            <Image
-              src="/PersianRug.PNG"
-              alt="Persian Rug Tee"
-              width={400}
-              height={400}
-              className="rounded-2xl"
-            />
+      </section>
 
-            <h2 className="text-2xl mt-6">PersianRugTee</h2>
+      <div className="grid md:grid-cols-3 gap-20 px-16 pb-24">
 
-            <p className="text-gray-500 mt-2">
-              Inspired by Persian Heritage
-            </p>
+  {/* Sky Tee */}
+  <Link href="/shop/products/SkyTee" className="group">
+    <div className="aspect-[4/5] relative overflow-hidden bg-neutral-900">
+      <Image
+        src="/Sky.PNG"
+        alt="Sky Tee"
+        fill
+        className="object-cover transition duration-700 group-hover:scale-105"
+      />
+    </div>
 
-            <p className="mt-4 text-xl">$50 CAD</p>
-          </div>
-        </Link>
-
-        {/* Leochi */}
-        <Link href="/shop/products/Leochi">
-          <div className="bg-white rounded-3xl shadow-lg p-8 cursor-pointer hover:shadow-2xl transition">
-            <Image
-              src="/Leochi.PNG"
-              alt="Leochi"
-              width={400}
-              height={400}
-              className="rounded-2xl"
-            />
-
-            <h2 className="text-2xl mt-6">Leochi</h2>
-
-            <p className="text-gray-500 mt-2">
-              Premium Cotton Collection
-            </p>
-
-            <p className="mt-4 text-xl">$50 CAD</p>
-          </div>
-        </Link>
-
+    <div className="mt-6 flex justify-between items-start">
+      <div>
+        <h2 className="font-serif text-[32px] text-white">Sky Tee</h2>
+        <p className="text-neutral-400 mt-2">Premium Heavyweight Cotton</p>
       </div>
+
+      <span className="text-white font-medium">
+  CAD $60
+</span>
+    </div>
+  </Link>
+
+
+  {/* Persian Rug Tee */}
+  <Link href="/shop/products/PersianRugTee" className="group">
+    <div className="aspect-[4/5] relative overflow-hidden bg-neutral-900">
+      <Image
+        src="/PersianRug.PNG"
+        alt="Persian Rug Tee"
+        fill
+        className="object-cover transition duration-700 group-hover:scale-105"
+      />
+    </div>
+
+    <div className="mt-6 flex justify-between items-start">
+      <div>
+        <h2 className="font-serif text-[32px] text-white">Persian Rug Tee</h2>
+        <p className="text-neutral-400 mt-2">Premium Heavyweight Cotton</p>
+      </div>
+
+      <span className="text-white font-medium">
+  CAD $60
+</span>
+    </div>
+  </Link>
+
+
+  {/* Leochi */}
+  <Link href="/shop/products/Leochi" className="group">
+    <div className="aspect-[4/5] relative overflow-hidden bg-neutral-900:">
+      <Image
+        src="/Leochi.PNG"
+        alt="Leochi"
+
+        fill
+        className="object-cover transition duration-700 group-hover:scale-105"
+      />
+    </div>
+
+    <div className="mt-6 flex justify-between items-start">
+      <div>
+        <h2 className="font-serif text-2xl text-white">Leochi</h2>
+        <p className="text-neutral-400 mt-2">Premium Heavyweight Cotton</p>
+      </div>
+
+      <span className="text-white font-medium">
+  CAD $60
+</span>
+    </div>
+  </Link>
+
+</div>
     </main>
   );
 }

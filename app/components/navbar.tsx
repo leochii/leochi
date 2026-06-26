@@ -1,41 +1,37 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { useCart } from "../context/cartcontext";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
-  const { cart } = useCart();
+  const pathname = usePathname();
+
+  if (pathname === "/") {
+    return null;
+  }
 
   return (
-    <nav className="sticky top-0 z-50 bg-[#fbf7f1] border-b">
-  <div className="max-w-7xl mx-auto px-8 py-5 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-neutral-800">
+      <div className="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between"
+        >
+          <Link
+            href="/"
+            className="text-3xl font-serif text-white"
+          >
+            LEOCHI
+          </Link>
 
-    {/* Left */}
-    <h1 className="text-4xl font-serif">
-      LEOCHI
-    </h1>
+        <nav className="flex gap-10 uppercase tracking-[0.25em] text-sm text-white">
 
-    {/* Center */}
-    <Image
-      src="/logo.PNG"
-      alt="Leochi Logo"
-      width={150}
-      height={150}
-      className="rounded-full"
-    />
+          <Link href="/shop">Shop</Link>
 
-    {/* Right */}
-    <div className="flex items-center gap-10 text-lg">
-      <Link href="/">Home</Link>
-      <Link href="/shop">Shop</Link>
-      <Link href="/about">About</Link>
-      <Link href="/cart">
-        Cart ({cart.length})
-      </Link>
-    </div>
+          <Link href="/about">About</Link>
 
-  </div>
-</nav>
+          <Link href="/cart">Cart</Link>
+
+        </nav>
+
+      </div>
+    </header>
   );
 }

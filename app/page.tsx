@@ -1,118 +1,59 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="bg-[#fbf7f1]">
+    <main className="h-screen overflow-hidden bg-black">
 
-      {/* HERO */}
+      <section className="relative h-screen">
 
-      <section className="h-screen flex flex-col justify-center items-center text-center px-6 relative overflow-hidden">
+        {/* Images */}
+        <div className="absolute inset-0 grid grid-cols-2">
 
-        <div className="absolute inset-0 overflow-hidden">
-
-  <Image
-    src="/Sky.PNG"
-    alt=""
-    width={450}
-    height={450}
-    className="absolute left-[-80px] top-20 opacity-15 blur-md rotate-[-15deg]"
-  />
-
-  <Image
-    src="/PersianRug.PNG"
-    alt=""
-    width={500}
-    height={500}
-    className="absolute right-[-80px] top-24 opacity-15 blur-md rotate-[12deg]"
-  />
-
-  <Image
-    src="/Leochi.PNG"
-    alt=""
-    width={400}
-    height={400}
-    className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 opacity-15 blur-md"
-  />
-
-</div>
-
-        <h1 className="text-7xl md:text-8xl font-serif tracking-wide z-10">
-          LEOCHI
-        </h1>
-
-        <p className="mt-6 text-gray-600 text-lg tracking-[0.2em] uppercase z-10">
-          Persian Heritage Reimagined
-        </p>
-
-        <p className="mt-3 text-gray-500 z-10">
-          EST. 2019
-        </p>
-        <div className="mt-10">
-  <a
-    href="/shop"
-    className="border border-black px-8 py-3 uppercase tracking-[0.3em] text-sm hover:bg-black hover:text-white transition"
-  >
-    View Collection
-  </a>
-</div>
-
-      </section>
-
-      {/* BRAND STATEMENT */}
-
-      <section className="max-w-3xl mx-auto px-8 py-32 text-center">
-
-        <h2 className="text-4xl font-serif mb-8">
-          Crafted With Meaning
-        </h2>
-
-        <p className="text-gray-600 leading-8 text-lg">
-          Inspired by Persian heritage and shaped by modern culture,
-          LEOCHI creates timeless garments that bridge tradition,
-          craftsmanship, and contemporary streetwear.
-        </p>
-
-      </section>
-
-      {/* COLLECTION */}
-
-      <section className="max-w-7xl mx-auto px-8 pb-32">
-
-        <h2 className="text-center text-4xl font-serif mb-16">
-          Collection
-        </h2>
-
-        <div className="grid md:grid-cols-3 gap-10">
-
-          <Link href="/shop/products/SkyTee">
+          <div className="group relative overflow-hidden">
             <Image
               src="/Sky.PNG"
-              alt="Sky"
-              width={500}
-              height={500}
-              className="w-full hover:opacity-90 transition"
+              alt="Sky Tee"
+              fill
+              priority
+              className="object-cover scale-125"
             />
-          </Link>
 
-          <Link href="/shop/products/PersianRugTee">
+            <div className="absolute inset-0 bg-black/35 group-hover:bg-black/15 transition duration-700" />
+          </div>
+
+          <div className="group relative overflow-hidden">
             <Image
               src="/PersianRug.PNG"
-              alt="Persian Rug"
-              width={500}
-              height={500}
-              className="w-full hover:opacity-90 transition"
+              alt="Persian Rug Tee"
+              fill
+              priority
+              className="object-cover scale-125"
             />
-          </Link>
 
-          <Link href="/shop/products/Leochi">
-            <Image
-              src="/Leochi.PNG"
-              alt="Leochi"
-              width={500}
-              height={500}
-              className="w-full hover:opacity-90 transition"
-            />
+            <div className="absolute inset-0 bg-black/35 group-hover:bg-black/15 transition duration-700" />
+          </div>
+
+        </div>
+
+        {/* Center */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+
+          <h1 className="font-serif text-8xl tracking-wide">
+            LEOCHI
+          </h1>
+
+          <p className="mt-6 text-xs tracking-[0.45em] uppercase opacity-80">
+            EST. 2026
+          </p>
+
+          <Link
+            href="/shop"
+            className="mt-10 border border-white px-10 py-4 uppercase tracking-[0.25em] text-sm transition hover:bg-white hover:text-black"
+          >
+            Shop Collection
           </Link>
 
         </div>
