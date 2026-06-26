@@ -13,7 +13,7 @@ export default function Shop() {
       <section className="text-center py-24">
 
         <p className="uppercase tracking-[0.4em] text-neutral-500 text-sm">
-          COLLECTION 01
+          COLLECTION 
         </p>
 
       </section>
