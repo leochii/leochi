@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (error) {
-      console.error(error);
+      console.error("Supabase insert error:", error);
     } else {
       console.log("Order saved.");
     }
