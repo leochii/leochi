@@ -22,9 +22,9 @@ export async function POST(req: Request) {
 
     mode: "payment",
 
-    success_url: "http://localhost:3000/success",
+    success_url: "https://leochi.co/success",
 
-    cancel_url: "http://localhost:3000/cart",
+    cancel_url: "https://leochi.co/cart",
   });
 
   return NextResponse.json({
