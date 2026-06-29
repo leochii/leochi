@@ -20,20 +20,21 @@ export default function Shop() {
 
       <div className="grid md:grid-cols-3 gap-20 px-16 pb-24">
 
-  {/* Sky Tee */}
-  <Link href="/shop/products/SkyTee" className="group">
-    <div className="aspect-[4/5] relative overflow-hidden bg-neutral-900">
+  {/* Chem-Trail */}
+  <Link href="/shop/products/Chem-Trail" className="group">
+    <div className="aspect-[3/4] relative overflow-hidden bg-neutral-900">
       <Image
-        src="/Sky.PNG"
-        alt="Sky Tee"
+        src="/Chem-Trail.PNG"
+        alt="Chem-Trail"
         fill
-        className="object-cover transition duration-700 group-hover:scale-105"
+        sizes="33vw"
+        className="object-cover object-top transition duration-700 group-hover:scale-110"
       />
     </div>
 
     <div className="mt-6 flex justify-between items-start">
       <div>
-        <h2 className="font-serif text-[32px] text-white">Sky Tee</h2>
+        <h2 className="font-serif text-[32px] text-white">Chem-Trail</h2>
         <p className="text-neutral-400 mt-2">Premium Heavyweight Cotton</p>
       </div>
 
@@ -44,20 +45,21 @@ export default function Shop() {
   </Link>
 
 
-  {/* Persian Rug Tee */}
-  <Link href="/shop/products/PersianRugTee" className="group">
-    <div className="aspect-[4/5] relative overflow-hidden bg-neutral-900">
+  {/* Farsh */}
+  <Link href="/shop/products/Farsh" className="group">
+    <div className="aspect-[3/4] relative overflow-hidden bg-neutral-900">
       <Image
-        src="/PersianRug.PNG"
-        alt="Persian Rug Tee"
+        src="/Farsh.PNG"
+        alt="Farsh"
         fill
-        className="object-cover transition duration-700 group-hover:scale-105"
+        sizes="33vw"
+        className="object-cover object-top transition duration-700 group-hover:scale-110"
       />
     </div>
 
     <div className="mt-6 flex justify-between items-start">
       <div>
-        <h2 className="font-serif text-[32px] text-white">Persian Rug Tee</h2>
+        <h2 className="font-serif text-[32px] text-white">Farsh</h2>
         <p className="text-neutral-400 mt-2">Premium Heavyweight Cotton</p>
       </div>
 
@@ -70,19 +72,19 @@ export default function Shop() {
 
   {/* Leochi */}
   <Link href="/shop/products/Leochi" className="group">
-    <div className="aspect-[4/5] relative overflow-hidden bg-neutral-900:">
+    <div className="aspect-[3/4] relative overflow-hidden bg-neutral-900">
       <Image
         src="/Leochi.PNG"
         alt="Leochi"
-
         fill
-        className="object-cover transition duration-700 group-hover:scale-105"
+        sizes="33vw"
+        className="object-cover object-top transition duration-700 group-hover:scale-110"
       />
     </div>
 
     <div className="mt-6 flex justify-between items-start">
       <div>
-        <h2 className="font-serif text-2xl text-white">Leochi</h2>
+        <h2 className="font-serif text-[32px] text-white">Leochi</h2>
         <p className="text-neutral-400 mt-2">Premium Heavyweight Cotton</p>
       </div>
 

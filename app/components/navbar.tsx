@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useCart } from "../context/cartcontext";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { cart } = useCart();
 
   if (pathname === "/") {
     return null;
@@ -27,7 +29,12 @@ export default function Navbar() {
 
           <Link href="/about">About</Link>
 
-          <Link href="/cart">Cart</Link>
+          <Link href="/cart">
+            Cart
+            <span className="ml-2 bg-white text-black px-2 py-1 text-xs font-bold">
+              {cart.length}
+            </span>
+          </Link>
 
         </nav>
 

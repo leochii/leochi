@@ -4,17 +4,23 @@ import Navbar from "../components/navbar";
 import { useCart } from "../context/cartcontext";
 
 export default function CartPage() {
-  const { cart, removeFromCart } = useCart();
-
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  const {
+  cart,
+  removeFromCart,
+  increaseQuantity,
+  decreaseQuantity,
+} = useCart();
+  const total = cart.reduce(
+  (sum, item) => sum + item.price * (item.quantity || 1),
+  0
+);
 
   return (
     <>
       <Navbar />
 
       <main className="bg-black text-white min-h-screen pt-28">
-
-        <div className="max-w-6xl mx-auto px-8">
+        <div className="max-w-7xl mx-auto px-8">
 
           <h1 className="font-serif text-5xl">
             Cart
@@ -24,88 +30,137 @@ export default function CartPage() {
             {cart.length} Item{cart.length !== 1 ? "s" : ""}
           </p>
 
-          <div className="mt-16">
+          <div className="mt-16 grid lg:grid-cols-[1fr_380px] gap-20">
 
-            {cart.map((item, index) => (
+            {/* LEFT */}
 
-              <div
-                key={index}
-                className="border-b border-neutral-800 py-10 flex justify-between items-start"
-              >
+            <div>
 
-                <div className="flex gap-8">
+              {cart.map((item, index) => (
 
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-36 h-44 object-cover rounded-lg"
-                  />
+                <div
+                  key={index}
+                  className="border-b border-neutral-800 py-10 flex justify-between items-center"
+                >
 
-                  <div>
+                  <div className="flex gap-8 items-center">
 
-                    <h2 className="font-serif text-3xl">
-                      {item.name}
-                    </h2>
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-40 h-52 object-cover"
+                    />
 
-                    <p className="text-neutral-500 mt-3">
-                      Premium Heavyweight Cotton
-                    </p>
+                    <div>
 
-                    <p className="text-neutral-500">
-                      Oversized Fit
-                    </p>
+                      <h2 className="font-serif text-4xl">
+                        {item.name}
+                      </h2>
 
-                    <p className="mt-8 text-xl">
-                      CAD ${item.price}
-                    </p>
+                      <p className="text-neutral-500 mt-3">
+                        Premium Heavyweight Cotton
+                      </p>
+
+                      <p className="text-neutral-500 mt-2">
+                        Oversized Fit
+                      </p>
+
+                      <p className="text-neutral-500 mt-2">
+                        Size: {item.size}
+                      </p>
+
+                      <div className="mt-6">
+  <div className="flex items-center gap-4">
+
+  <button
+    onClick={() => decreaseQuantity(index)}
+    className="w-10 h-10 border border-neutral-700 hover:border-white transition"
+  >
+    −
+  </button>
+
+  <span className="w-6 text-center text-lg">
+    {item.quantity}
+  </span>
+
+  <button
+    onClick={() => increaseQuantity(index)}
+    className="w-10 h-10 border border-neutral-700 hover:border-white transition"
+  >
+    +
+  </button>
+
+</div>
+                      </div>
+
+                      <p className="text-2xl mt-6">
+                        CAD ${item.price}
+                      </p>
+
+                    </div>
 
                   </div>
 
+                  <button
+                    onClick={() => removeFromCart(index)}
+                    className="border border-neutral-700 px-6 py-3 hover:border-white transition"
+                  >
+                    Remove
+                  </button>
+
                 </div>
 
-                <button
-                  onClick={() => removeFromCart(index)}
-                  className="text-neutral-500 hover:text-white transition"
-                >
-                  Remove
-                </button>
+              ))}
+
+            </div>
+
+            {/* RIGHT */}
+
+            <div className="sticky top-28 h-fit border border-neutral-800 p-8">
+
+              <h2 className="font-serif text-3xl mb-10">
+                Summary
+              </h2>
+
+              <div className="flex justify-between">
+
+                <span>Subtotal</span>
+
+                <span>CAD ${total}</span>
 
               </div>
 
-            ))}
+              <div className="flex justify-between text-neutral-500 mt-5">
 
-          </div>
+                <span>Shipping</span>
 
-          <div className="mt-16 max-w-md ml-auto">
+                <span>Calculated at checkout</span>
 
-            <div className="flex justify-between text-lg">
+              </div>
 
-              <span>Subtotal</span>
+              <div className="border-t border-neutral-800 mt-8 pt-8 flex justify-between text-xl">
 
-              <span>CAD ${total}</span>
+                <span>Total</span>
+
+                <span>CAD ${total}</span>
+
+              </div>
+
+              <button
+  onClick={() => {
+    window.location.href = "/checkout";
+  }}
+  className="mt-10 w-full bg-white text-black py-5 uppercase tracking-[0.25em] hover:bg-neutral-200 transition"
+>
+  Checkout
+</button>
 
             </div>
-
-            <div className="flex justify-between text-neutral-500 mt-4">
-
-              <span>Shipping</span>
-
-              <span>Calculated at checkout</span>
-
-            </div>
-
-            <button className="mt-10 w-full bg-white text-black py-5 uppercase tracking-[0.3em] hover:bg-neutral-200 transition">
-
-              Checkout
-
-            </button>
 
           </div>
 
         </div>
-
       </main>
-
     </>
   );
 }

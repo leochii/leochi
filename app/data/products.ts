@@ -1,21 +1,21 @@
 export const products = [
   {
-    slug: "SkyTee",
-    name: "Sky Tee",
+    slug: "Chem-Trail",
+    name: "Chem-Trail",
     price: 60,
     images: [
-      "/Sky.PNG",
-      "/Sky-close.PNG",
+      "/Chem-Trail.PNG",
+      "/Chem-Trail-close.PNG",
     ],
   },
 
   {
-    slug: "PersianRugTee",
-    name: "Persian Rug Tee",
+    slug: "Farsh",
+    name: "Farsh",
     price: 60,
     images: [
-      "/PersianRug.PNG",
-      "/Persian-close.PNG",
+      "/Farsh.PNG",
+      "/Farsh-close.PNG",
     ],
   },
 

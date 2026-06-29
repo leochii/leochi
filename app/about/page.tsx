@@ -5,7 +5,7 @@ export default function About() {
     <>
       <Navbar />
 
-      <main className="bg-black text-white min-h-screen">
+      <main className="bg-black text-white min-h-screen pt-20">
         <div className="max-w-5xl mx-auto px-8 pt-32 pb-28">
 
           <p className="uppercase tracking-[0.45em] text-xs text-neutral-500">

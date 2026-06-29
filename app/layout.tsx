@@ -55,8 +55,8 @@ export default function RootLayout({
         </h3>
 
         <ul className="space-y-3 text-gray-300">
-          <li>Sky Tee</li>
-          <li>Persian Rug Tee</li>
+          <li>Chem-Trail</li>
+          <li>Farsh</li>
           <li>Leochi</li>
         </ul>
       </div>

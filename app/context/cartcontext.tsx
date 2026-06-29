@@ -1,23 +1,37 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-type CartItem = {
+export type CartItem = {
   name: string;
   price: number;
   image: string;
+  size: string;
+  quantity: number;
 };
 
 type CartContextType = {
   cart: CartItem[];
+
   addToCart: (item: CartItem) => void;
+
   removeFromCart: (index: number) => void;
+
+  increaseQuantity: (index: number) => void;
+
+  decreaseQuantity: (index: number) => void;
 };
 
 const CartContext = createContext<CartContextType>({
   cart: [],
+
   addToCart: () => {},
+
   removeFromCart: () => {},
+
+  increaseQuantity: () => {},
+
+  decreaseQuantity: () => {},
 });
 
 export function CartProvider({
@@ -28,27 +42,77 @@ export function CartProvider({
   const [cart, setCart] = useState<CartItem[]>([]);
 
   useEffect(() => {
-  const savedCart = localStorage.getItem("cart");
+    const savedCart = localStorage.getItem("cart");
 
-  if (savedCart) {
-    setCart(JSON.parse(savedCart));
-  }
-}, []);
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+  }, []);
 
-useEffect(() => {
-  localStorage.setItem("cart", JSON.stringify(cart));
-}, [cart]);
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   function addToCart(item: CartItem) {
-    setCart([...cart, item]);
+    const existingIndex = cart.findIndex(
+      (cartItem) =>
+        cartItem.name === item.name &&
+        cartItem.size === item.size
+    );
+
+    if (existingIndex !== -1) {
+      const updatedCart = [...cart];
+
+      updatedCart[existingIndex].quantity += 1;
+
+      setCart(updatedCart);
+
+      return;
+    }
+
+    setCart([
+      ...cart,
+      {
+        ...item,
+        quantity: 1,
+      },
+    ]);
   }
 
   function removeFromCart(index: number) {
-  setCart(cart.filter((_, i) => i !== index));
-}
+    setCart(cart.filter((_, i) => i !== index));
+  }
+
+  function increaseQuantity(index: number) {
+    const updatedCart = [...cart];
+
+    updatedCart[index].quantity += 1;
+
+    setCart(updatedCart);
+  }
+
+  function decreaseQuantity(index: number) {
+    const updatedCart = [...cart];
+
+    if (updatedCart[index].quantity > 1) {
+      updatedCart[index].quantity -= 1;
+
+      setCart(updatedCart);
+    } else {
+      removeFromCart(index);
+    }
+  }
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        increaseQuantity,
+        decreaseQuantity,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
