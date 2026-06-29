@@ -43,10 +43,11 @@ export async function POST(req: NextRequest) {
     });
 
     if (error) {
-      console.error("Supabase insert error:", error);
-    } else {
-      console.log("Order saved.");
-    }
+  console.error("SUPABASE ERROR:");
+  console.error(JSON.stringify(error, null, 2));
+} else {
+  console.log("Order saved!");
+}
   }
 
   return NextResponse.json({ received: true });
