@@ -22,9 +22,16 @@ export async function POST(req: Request) {
 
     mode: "payment",
 
+metadata: {
+  products: JSON.stringify(cartItems),
+},
     success_url: "https://leochi.co/success",
+cancel_url: "https://leochi.co/cart",
 
-    cancel_url: "https://leochi.co/cart",
+billing_address_collection: "required",
+phone_number_collection: {
+  enabled: true,
+},
   });
 
   return NextResponse.json({
