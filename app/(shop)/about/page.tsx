@@ -1,10 +1,7 @@
-import Navbar from "../components/navbar";
-
 export default function About() {
   return (
     <>
-      <Navbar />
-
+    
       <main className="bg-black text-white min-h-screen pt-20">
         <div className="max-w-5xl mx-auto px-8 pt-32 pb-28">
 

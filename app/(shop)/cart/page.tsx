@@ -1,7 +1,6 @@
 "use client";
 
-import Navbar from "../components/navbar";
-import { useCart } from "../context/cartcontext";
+import { useCart } from "../../context/cartcontext";
 
 export default function CartPage() {
   const {
@@ -17,8 +16,7 @@ export default function CartPage() {
 
   return (
     <>
-      <Navbar />
-
+      
       <main className="bg-black text-white min-h-screen pt-28">
         <div className="max-w-7xl mx-auto px-8">
 
