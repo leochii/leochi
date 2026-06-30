@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { notFound, useParams } from "next/navigation";
-import { products } from "../../../data/products";
-import { useCart } from "../../../context/cartcontext";
+import { products } from "../../../../data/products";
+import { useCart } from "../../../../context/cartcontext";
 
 export default function ProductPage() {
   const params = useParams<{ slug?: string }>();

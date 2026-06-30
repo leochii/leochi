@@ -76,7 +76,7 @@ const averageOrder =
 }
 
   return (
-    <main className="min-h-screen bg-black text-white p-10">
+    <main className="min-h-screen bg-black text-white pt-32 px-10 pb-10">
       <div className="max-w-7xl mx-auto">
 
         <div className="flex justify-between items-center mb-10">
