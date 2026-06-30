@@ -25,6 +25,13 @@ const totalOrders = orders?.length ?? 0;
 
 const averageOrder =
   totalOrders > 0 ? totalSales / totalOrders : 0;
+  if (orders?.length === 0) {
+  return (
+    <main className="min-h-screen bg-black text-white flex items-center justify-center">
+      <h1 className="text-2xl">No orders yet.</h1>
+    </main>
+  );
+}
 
   return (
     <main className="min-h-screen bg-black text-white p-10">
@@ -94,15 +101,25 @@ const averageOrder =
                 </td>
 
                 <td>
-                  CAD ${(order.amount ?? 0) / 100}
+                  CAD ${((order.amount ?? 0) / 100).toFixed(2)}
                 </td>
 
                 <td>
-                  {order.status}
-                </td>
+  <span
+    className={`px-3 py-1 rounded-full text-sm ${
+      order.status === "paid"
+        ? "bg-green-600"
+        : order.status === "pending"
+        ? "bg-yellow-600"
+        : "bg-neutral-700"
+    }`}
+  >
+    {order.status}
+  </span>
+</td>
 
                 <td>
-                  {new Date(order.created_at).toLocaleDateString()}
+                  {new Date(order.created_at).toLocaleString()}
                 </td>
 
               </tr>
