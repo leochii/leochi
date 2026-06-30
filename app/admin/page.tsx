@@ -27,6 +27,39 @@ if (!isAdmin) {
       </main>
     );
   }
+const now = new Date();
+
+const todayOrders =
+  orders?.filter((order) => {
+    const date = new Date(order.created_at);
+
+    return (
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear()
+    );
+  }) ?? [];
+
+const monthOrders =
+  orders?.filter((order) => {
+    const date = new Date(order.created_at);
+
+    return (
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear()
+    );
+  }) ?? [];
+
+const todaySales = todayOrders.reduce(
+  (sum, order) => sum + (order.amount ?? 0),
+  0
+);
+
+const monthSales = monthOrders.reduce(
+  (sum, order) => sum + (order.amount ?? 0),
+  0
+);
+
 const totalSales =
   orders?.reduce((sum, order) => sum + (order.amount ?? 0), 0) ?? 0;
 
@@ -49,8 +82,7 @@ const averageOrder =
         <h1 className="text-5xl font-serif mb-10">
           Orders
         </h1>
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-
+<div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
   <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
     <p className="text-neutral-400">Total Sales</p>
     <h2 className="text-3xl font-bold">
@@ -71,7 +103,19 @@ const averageOrder =
       CAD ${(averageOrder / 100).toFixed(2)}
     </h2>
   </div>
+<div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+  <p className="text-neutral-400">Today</p>
+  <h2 className="text-3xl font-bold">
+    CAD ${(todaySales / 100).toFixed(2)}
+  </h2>
+</div>
 
+<div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+  <p className="text-neutral-400">This Month</p>
+  <h2 className="text-3xl font-bold">
+    CAD ${(monthSales / 100).toFixed(2)}
+  </h2>
+</div>
 </div>
 
 <OrdersTable orders={orders} />
