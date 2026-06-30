@@ -9,9 +9,11 @@ export default function AdminLoginPage() {
   const router = useRouter();
 
   async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
+  e.preventDefault();
 
-    setLoading(true);
+  alert("clicked");
+
+  setLoading(true);
 
     const res = await fetch("/api/admin/login", {
       method: "POST",
@@ -20,7 +22,10 @@ export default function AdminLoginPage() {
       },
       body: JSON.stringify({ password }),
     });
+console.log(res.status);
 
+const data = await res.json();
+console.log(data);
     setLoading(false);
 
     if (!res.ok) {
