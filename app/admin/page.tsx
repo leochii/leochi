@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import OrdersTable from "./OrdersTable";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -7,6 +9,13 @@ const supabase = createClient(
 );
 
 export default async function AdminPage() {
+    const cookieStore = await cookies();
+
+const isAdmin = cookieStore.get("admin")?.value === "true";
+
+if (!isAdmin) {
+  redirect("/admin/login");
+}
   const { data: orders, error } = await supabase
     .from("orders")
     .select("*")
