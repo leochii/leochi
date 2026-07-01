@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 
 type Order = {
   id: string;
@@ -14,6 +15,8 @@ export default function OrdersTable({
 }: {
   orders: Order[];
 }) {
+  const router = useRouter();
+
   return (
     <table className="w-full border-collapse">
       <thead>
@@ -28,29 +31,29 @@ export default function OrdersTable({
 
       <tbody>
         {orders.map((order) => (
-          <tr key={order.id} className="border-b border-neutral-800">
+          <tr
+            key={order.id}
+            className="border-b border-neutral-800 hover:bg-neutral-900 cursor-pointer transition"
+            onClick={() => router.push(`/admin/orders/${order.id}`)}
+          >
             <td className="py-5">{order.customer_name}</td>
-
             <td>{order.customer_email}</td>
-
             <td>
               CAD ${((order.amount ?? 0) / 100).toFixed(2)}
             </td>
-
             <td>
               <span
                 className={`px-3 py-1 rounded-full text-sm ${
                   order.status === "paid"
                     ? "bg-green-600"
                     : order.status === "pending"
-                    ? "bg-yellow-600"
-                    : "bg-neutral-700"
+                      ? "bg-yellow-600"
+                      : "bg-neutral-700"
                 }`}
               >
                 {order.status}
               </span>
             </td>
-
             <td>{new Date(order.created_at).toLocaleString()}</td>
           </tr>
         ))}
