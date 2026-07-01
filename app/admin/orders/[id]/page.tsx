@@ -8,13 +8,18 @@ const supabase = createClient(
 export default async function OrderPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
+
+  console.log("ID:", id);
+  
   const { data: order } = await supabase
     .from("orders")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
+console.log("ORDER:", order);
 
   if (!order) {
     return (
