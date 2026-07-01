@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import OrderManager from "../../OrderManager";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -28,6 +29,21 @@ console.log("ORDER:", order);
       </main>
     );
   }
+const statuses = [
+  "paid",
+  "processing",
+  "shipped",
+  "delivered",
+  "cancelled",
+];
+
+const carriers = [
+  "Canada Post",
+  "UPS",
+  "FedEx",
+  "Purolator",
+  "DHL",
+];
 
   return (
     <main className="min-h-screen bg-black text-white p-10">
@@ -69,7 +85,6 @@ console.log("ORDER:", order);
           <p>
             <strong>Total:</strong> CAD ${((order.amount ?? 0) / 100).toFixed(2)}
           </p>
-          <h2 className="text-2xl font-serif mt-10 mb-4">Products</h2>
 
           <div className="space-y-4">
             {order.products?.map((product: any, index: number) => (
