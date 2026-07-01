@@ -50,6 +50,17 @@ console.log("ORDER:", order);
           <p>
             <strong>Phone:</strong> {order.phone}
           </p>
+<p>
+  <strong>Order Status:</strong> {order.order_status ?? "paid"}
+</p>
+
+<p>
+  <strong>Tracking Number:</strong> {order.tracking_number ?? "-"}
+</p>
+
+<p>
+  <strong>Carrier:</strong> {order.carrier ?? "-"}
+</p>
 
           <p>
             <strong>Status:</strong> {order.status}
