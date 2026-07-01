@@ -86,6 +86,8 @@ const carriers = [
             <strong>Total:</strong> CAD ${((order.amount ?? 0) / 100).toFixed(2)}
           </p>
 
+          <OrderManager {...({ order } as any)} />
+
           <div className="space-y-4">
             {order.products?.map((product: any, index: number) => (
               <div
