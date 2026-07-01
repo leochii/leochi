@@ -13,7 +13,7 @@ export default async function OrderPage({
   const { id } = await params;
 
   console.log("ID:", id);
-  
+
   const { data: order } = await supabase
     .from("orders")
     .select("*")
@@ -56,12 +56,32 @@ console.log("ORDER:", order);
           </p>
 
           <p>
-            <strong>Total:</strong> CAD $
-            {((order.amount ?? 0) / 100).toFixed(2)}
+            <strong>Total:</strong> CAD ${((order.amount ?? 0) / 100).toFixed(2)}
           </p>
+          <h2 className="text-2xl font-serif mt-10 mb-4">Products</h2>
 
+          <div className="space-y-4">
+            {order.products?.map((product: any, index: number) => (
+              <div
+                key={index}
+                className="flex items-center gap-4 border border-neutral-800 rounded-xl p-4"
+              >
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-20 h-20 rounded-lg object-cover"
+                />
+
+                <div>
+                  <p className="font-semibold">{product.name}</p>
+                  <p>Size: {product.size}</p>
+                  <p>Quantity: {product.quantity}</p>
+                  <p>CAD ${(product.price).toFixed(2)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-
       </div>
     </main>
   );
