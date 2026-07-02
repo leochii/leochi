@@ -1,3 +1,7 @@
+"use client";
+
+import { Toast } from "../components/Toast";
+
 export default function AdminLayout({
   children,
 }: {
@@ -5,6 +9,7 @@ export default function AdminLayout({
 }) {
   return (
     <main className="min-h-screen bg-black text-white">
+      <Toast />
       {children}
     </main>
   );

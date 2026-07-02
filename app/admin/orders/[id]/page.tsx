@@ -13,14 +13,11 @@ export default async function OrderPage({
 }) {
   const { id } = await params;
 
-  console.log("ID:", id);
-
   const { data: order } = await supabase
     .from("orders")
     .select("*")
     .eq("id", id)
     .single();
-console.log("ORDER:", order);
 
   if (!order) {
     return (
@@ -29,21 +26,6 @@ console.log("ORDER:", order);
       </main>
     );
   }
-const statuses = [
-  "paid",
-  "processing",
-  "shipped",
-  "delivered",
-  "cancelled",
-];
-
-const carriers = [
-  "Canada Post",
-  "UPS",
-  "FedEx",
-  "Purolator",
-  "DHL",
-];
 
   return (
     <main className="min-h-screen bg-black text-white p-10">
@@ -66,30 +48,20 @@ const carriers = [
           <p>
             <strong>Phone:</strong> {order.phone}
           </p>
-<p>
-  <strong>Order Status:</strong> {order.order_status ?? "paid"}
-</p>
-
-<p>
-  <strong>Tracking Number:</strong> {order.tracking_number ?? "-"}
-</p>
-
-<p>
-  <strong>Carrier:</strong> {order.carrier ?? "-"}
-</p>
-
-          <p>
-            <strong>Status:</strong> {order.status}
-          </p>
 
           <p>
             <strong>Total:</strong> CAD ${((order.amount ?? 0) / 100).toFixed(2)}
           </p>
 
-          <OrderManager {...({ order } as any)} />
+          <OrderManager
+            id={order.id}
+            order_status={order.order_status ?? "paid"}
+            tracking_number={order.tracking_number ?? ""}
+            carrier={order.carrier ?? "Canada Post"}
+          />
 
           <div className="space-y-4">
-            {order.products?.map((product: any, index: number) => (
+            {order.products?.map((product: { image: string; name: string; size: string; quantity: number; price: number }, index: number) => (
               <div
                 key={index}
                 className="flex items-center gap-4 border border-neutral-800 rounded-xl p-4"
