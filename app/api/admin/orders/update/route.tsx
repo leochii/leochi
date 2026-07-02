@@ -47,8 +47,8 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log("Incoming request body:", body);
 
-    const { id, order_status, status, tracking_number, carrier } = body;
-    const payloadStatus = order_status ?? status;
+    const { id, status, tracking_number, carrier } = body;
+    const payloadStatus = status;
 
     if (!id || typeof id !== "string") {
       return NextResponse.json(

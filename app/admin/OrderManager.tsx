@@ -5,18 +5,18 @@ import { showToast } from "../components/Toast";
 
 type Props = {
   id: string;
-  order_status?: string;
+  status?: string;
   tracking_number?: string;
   carrier?: string;
 };
 
 export default function OrderManager({
   id,
-  order_status = "paid",
+  status = "paid",
   tracking_number = "",
   carrier = "Canada Post",
 }: Props) {
-  const [status, setStatus] = useState(order_status);
+  const [statusValue, setStatus] = useState(status);
   const [tracking, setTracking] = useState(tracking_number);
   const [shippingCarrier, setShippingCarrier] = useState(carrier);
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ export default function OrderManager({
         },
         body: JSON.stringify({
           id,
-          order_status: status,
+          status: statusValue,
           tracking_number: tracking,
           carrier: shippingCarrier,
         }),
@@ -75,7 +75,7 @@ export default function OrderManager({
         <label className="block text-sm font-medium text-neutral-300 mb-2">Order Status</label>
 
         <select
-          value={status}
+          value={statusValue}
           onChange={(e) => setStatus(e.target.value)}
           disabled={loading}
           className="w-full bg-neutral-900 border border-neutral-700 rounded-lg p-3 text-white disabled:opacity-50 disabled:cursor-not-allowed focus:border-white focus:outline-none transition"

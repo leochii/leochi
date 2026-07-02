@@ -73,7 +73,7 @@ export default async function OrderPage({
 
           <OrderManager
             id={order.id}
-            order_status={order.order_status ?? "paid"}
+            status={order.status ?? "paid"}
             tracking_number={order.tracking_number ?? ""}
             carrier={order.carrier ?? "Canada Post"}
           />
