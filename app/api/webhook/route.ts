@@ -96,12 +96,18 @@ export async function POST(req: NextRequest) {
               console.log("[WEBHOOK] Email send response:", JSON.stringify(emailResponse, null, 2));
 
               if (emailResponse.error) {
-                console.error("[WEBHOOK] Email send error:", JSON.stringify(emailResponse.error, null, 2));
+                console.error("[WEBHOOK] RESEND ERROR - Full Response:", JSON.stringify(emailResponse, null, 2));
+                console.error("[WEBHOOK] RESEND ERROR - Status:", (emailResponse as any).statusCode || (emailResponse as any).status || "unknown");
+                console.error("[WEBHOOK] RESEND ERROR - Name:", (emailResponse.error as any)?.name || "unknown");
+                console.error("[WEBHOOK] RESEND ERROR - Message:", (emailResponse.error as any)?.message || JSON.stringify(emailResponse.error));
               } else {
                 console.log("[WEBHOOK] Confirmation email sent successfully! ID:", emailResponse.data?.id);
               }
             } catch (emailError) {
-              console.error("[WEBHOOK] Email send exception:", emailError);
+              console.error("[WEBHOOK] RESEND EXCEPTION - Full Error:", emailError);
+              console.error("[WEBHOOK] RESEND EXCEPTION - Type:", typeof emailError);
+              console.error("[WEBHOOK] RESEND EXCEPTION - Constructor:", (emailError as any)?.constructor?.name);
+              console.error("[WEBHOOK] RESEND EXCEPTION - Stack:", (emailError as any)?.stack);
             }
           }
         } else {
