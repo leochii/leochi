@@ -38,6 +38,10 @@ export async function POST(req: NextRequest) {
       const supabase = createClient(supabaseUrl, supabaseKey);
       const session = event.data.object as Stripe.Checkout.Session;
 
+      console.log("[WEBHOOK] Processing checkout.session.completed");
+      console.log("[WEBHOOK] Customer email:", session.customer_details?.email);
+      console.log("[WEBHOOK] RESEND_API_KEY present:", !!process.env.RESEND_API_KEY);
+
       const { error } = await supabase.from("orders").insert({
         stripe_session_id: session.id,
         customer_email: session.customer_details?.email,
@@ -54,13 +58,58 @@ export async function POST(req: NextRequest) {
       });
 
       if (error) {
-        console.error("SUPABASE ERROR:");
-        console.error(JSON.stringify(error, null, 2));
+        console.error("[WEBHOOK] SUPABASE ERROR:");
+        console.error("[WEBHOOK]", JSON.stringify(error, null, 2));
       } else {
-        console.log("Order saved!");
+        console.log("[WEBHOOK] Order saved successfully!");
+
+        // Send confirmation email
+        const customerEmail = session.customer_details?.email;
+        const customerName = session.customer_details?.name || "Valued Customer";
+
+        if (customerEmail) {
+          console.log("[WEBHOOK] Attempting to send confirmation email to:", customerEmail);
+
+          if (!process.env.RESEND_API_KEY) {
+            console.error("[WEBHOOK] ERROR: RESEND_API_KEY is not set");
+          } else {
+            try {
+              console.log("[WEBHOOK] Importing Resend...");
+              const { Resend } = await import("resend");
+              const resend = new Resend(process.env.RESEND_API_KEY);
+
+              console.log("[WEBHOOK] Calling resend.emails.send()...");
+              const emailResponse = await resend.emails.send({
+                from: "orders@leochi.co",
+                to: customerEmail,
+                subject: "Order Confirmation - LEOCHI",
+                html: `
+                  <h1>Thank you for your purchase!</h1>
+                  <p>Hi ${customerName},</p>
+                  <p>Your order has been confirmed and will be shipped soon.</p>
+                  <p>Order Total: CAD $${((session.amount_total || 0) / 100).toFixed(2)}</p>
+                  <p>We'll send you a tracking number as soon as your order ships.</p>
+                  <p>Best regards,<br/>LEOCHI Team</p>
+                `,
+              });
+
+              console.log("[WEBHOOK] Email send response:", JSON.stringify(emailResponse, null, 2));
+
+              if (emailResponse.error) {
+                console.error("[WEBHOOK] Email send error:", JSON.stringify(emailResponse.error, null, 2));
+              } else {
+                console.log("[WEBHOOK] Confirmation email sent successfully! ID:", emailResponse.data?.id);
+              }
+            } catch (emailError) {
+              console.error("[WEBHOOK] Email send exception:", emailError);
+            }
+          }
+        } else {
+          console.warn("[WEBHOOK] No customer email found, skipping email send");
+        }
       }
     } catch (error) {
-      console.error("Webhook handler error:", error);
+      console.error("[WEBHOOK] Webhook handler error:", error);
     }
   }
 

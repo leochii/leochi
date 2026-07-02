@@ -11,7 +11,7 @@ export default function SuccessPage() {
   }, [clearCart]);
 
   return (
-    <main className="min-h-screen bg-black text-white flex items-center justify-center">
+    <main className="relative z-0 pt-20 min-h-screen bg-black text-white flex items-center justify-center">
       <div className="text-center">
         <h1 className="text-5xl font-serif mb-6">
           Payment Successful 

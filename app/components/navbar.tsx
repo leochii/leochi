@@ -13,7 +13,7 @@ export default function Navbar() {
 }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-neutral-800">
+    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-auto bg-black border-b border-neutral-800">
       <div className="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between"
         >
           <Link
