@@ -3,10 +3,17 @@ import OrdersTable from "./OrdersTable";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import Link from "next/link";
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+
+const getSupabaseClient = () => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !key) {
+    throw new Error("Supabase credentials not configured");
+  }
+
+  return createClient(url, key);
+};
 
 export default async function AdminPage() {
     const cookieStore = await cookies();
@@ -15,12 +22,26 @@ const isAdmin = cookieStore.get("admin-auth")?.value === "true";
 if (!isAdmin) {
   redirect("/admin/login");
 }
+
+  let supabase;
+  try {
+    supabase = getSupabaseClient();
+  } catch (error) {
+    console.error("Failed to initialize Supabase:", error);
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <p>Error: Server not properly configured.</p>
+      </main>
+    );
+  }
+
   const { data: orders, error } = await supabase
     .from("orders")
     .select("*")
     .order("created_at", { ascending: false });
 
   if (error) {
+    console.error("Error loading orders:", error);
     return (
       <main className="min-h-screen flex items-center justify-center">
         <p>Error loading orders.</p>

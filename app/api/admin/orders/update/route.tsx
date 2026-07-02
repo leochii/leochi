@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://example.supabase.co";
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "example-key";
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 const VALID_STATUSES = [
   "pending",
   "paid",
@@ -25,12 +20,21 @@ const VALID_CARRIERS = [
 
 export async function POST(req: Request) {
   try {
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseKey) {
+      console.error(
+        "Supabase credentials missing:",
+        { hasUrl: !!supabaseUrl, hasKey: !!supabaseKey }
+      );
       return NextResponse.json(
-        { success: false, error: "Server configuration error: Supabase not configured" },
+        { success: false, error: "Server configuration error: Supabase credentials not configured" },
         { status: 500 }
       );
     }
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     const body = await req.json();
     const { id, order_status, tracking_number, carrier } = body;
@@ -69,6 +73,8 @@ export async function POST(req: Request) {
       );
     }
 
+    console.log("Updating order:", { id, order_status, tracking_number, carrier });
+
     const { error } = await supabase
       .from("orders")
       .update({
@@ -79,16 +85,19 @@ export async function POST(req: Request) {
       .eq("id", id);
 
     if (error) {
+      console.error("Supabase update error:", error);
       return NextResponse.json(
         { success: false, error: error.message || "Failed to update order" },
         { status: 500 }
       );
     }
 
+    console.log("Order updated successfully:", id);
     return NextResponse.json({ success: true });
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
+    console.error("API error:", errorMessage, error);
     return NextResponse.json(
       { success: false, error: errorMessage },
       { status: 500 }

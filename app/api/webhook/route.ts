@@ -4,11 +4,6 @@ import { createClient } from "@supabase/supabase-js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 export async function POST(req: NextRequest) {
   const body = await req.text();
 
@@ -31,34 +26,42 @@ export async function POST(req: NextRequest) {
   }
 
   if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
+    try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    const { error } = await supabase.from("orders").insert({
-  stripe_session_id: session.id,
+      if (!supabaseUrl || !supabaseKey) {
+        console.error("Supabase credentials missing in webhook");
+        return NextResponse.json({ received: true });
+      }
 
-  customer_email: session.customer_details?.email,
-  customer_name: session.customer_details?.name,
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      const session = event.data.object as Stripe.Checkout.Session;
 
-  amount: session.amount_total,
-  currency: session.currency,
-  status: session.payment_status,
+      const { error } = await supabase.from("orders").insert({
+        stripe_session_id: session.id,
+        customer_email: session.customer_details?.email,
+        customer_name: session.customer_details?.name,
+        amount: session.amount_total,
+        currency: session.currency,
+        status: session.payment_status,
+        products: JSON.parse(session.metadata?.products || "[]"),
+        shipping_address: session.customer_details?.address?.line1,
+        city: session.customer_details?.address?.city,
+        province: session.customer_details?.address?.state,
+        postal_code: session.customer_details?.address?.postal_code,
+        phone: session.customer_details?.phone,
+      });
 
-  products: JSON.parse(session.metadata?.products || "[]"),
-
-  shipping_address: session.customer_details?.address?.line1,
-  city: session.customer_details?.address?.city,
-  province: session.customer_details?.address?.state,
-  postal_code: session.customer_details?.address?.postal_code,
-
-  phone: session.customer_details?.phone,
-})
-
-    if (error) {
-  console.error("SUPABASE ERROR:");
-  console.error(JSON.stringify(error, null, 2));
-} else {
-  console.log("Order saved!");
-}
+      if (error) {
+        console.error("SUPABASE ERROR:");
+        console.error(JSON.stringify(error, null, 2));
+      } else {
+        console.log("Order saved!");
+      }
+    } catch (error) {
+      console.error("Webhook handler error:", error);
+    }
   }
 
   return NextResponse.json({ received: true });

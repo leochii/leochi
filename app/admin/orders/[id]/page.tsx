@@ -1,10 +1,16 @@
 import { createClient } from "@supabase/supabase-js";
 import OrderManager from "../../OrderManager";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+const getSupabaseClient = () => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !key) {
+    throw new Error("Supabase credentials not configured");
+  }
+
+  return createClient(url, key);
+};
 
 export default async function OrderPage({
   params,
@@ -12,6 +18,18 @@ export default async function OrderPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+
+  let supabase;
+  try {
+    supabase = getSupabaseClient();
+  } catch (error) {
+    console.error("Failed to initialize Supabase:", error);
+    return (
+      <main className="min-h-screen bg-black text-white flex items-center justify-center">
+        <h1>Server configuration error.</h1>
+      </main>
+    );
+  }
 
   const { data: order } = await supabase
     .from("orders")
