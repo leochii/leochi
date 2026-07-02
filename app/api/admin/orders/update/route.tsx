@@ -19,9 +19,17 @@ const VALID_CARRIERS = [
 ];
 
 export async function POST(req: Request) {
+  const requestTimestamp = new Date().toISOString();
+  console.log("POST /api/admin/orders/update called:", { requestTimestamp });
+
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    console.log("Supabase credentials present:", {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseKey,
+    });
 
     if (!supabaseUrl || !supabaseKey) {
       console.error(
@@ -37,7 +45,10 @@ export async function POST(req: Request) {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const body = await req.json();
-    const { id, order_status, tracking_number, carrier } = body;
+    console.log("Incoming request body:", body);
+
+    const { id, order_status, status, tracking_number, carrier } = body;
+    const payloadStatus = order_status ?? status;
 
     if (!id || typeof id !== "string") {
       return NextResponse.json(
@@ -46,7 +57,7 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!order_status || !VALID_STATUSES.includes(order_status)) {
+    if (!payloadStatus || !VALID_STATUSES.includes(payloadStatus)) {
       return NextResponse.json(
         {
           success: false,
@@ -73,15 +84,17 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("Updating order:", { id, order_status, tracking_number, carrier });
+    const updatePayload = {
+      status: payloadStatus,
+      tracking_number: tracking_number || null,
+      carrier: carrier || null,
+    };
+
+    console.log("Supabase update payload:", updatePayload);
 
     const { error } = await supabase
       .from("orders")
-      .update({
-        order_status,
-        tracking_number: tracking_number || null,
-        carrier: carrier || null,
-      })
+      .update(updatePayload)
       .eq("id", id);
 
     if (error) {
@@ -97,9 +110,14 @@ export async function POST(req: Request) {
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
-    console.error("API error:", errorMessage, error);
+    const stack = error instanceof Error ? error.stack : undefined;
+    console.error("API error:", {
+      message: errorMessage,
+      stack,
+      requestTimestamp,
+    });
     return NextResponse.json(
-      { success: false, error: errorMessage },
+      { success: false, error: errorMessage, stack },
       { status: 500 }
     );
   }
