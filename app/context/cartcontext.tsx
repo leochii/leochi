@@ -20,6 +20,8 @@ type CartContextType = {
   increaseQuantity: (index: number) => void;
 
   decreaseQuantity: (index: number) => void;
+
+  clearCart: () => void;
 };
 
 const CartContext = createContext<CartContextType>({
@@ -32,6 +34,8 @@ const CartContext = createContext<CartContextType>({
   increaseQuantity: () => {},
 
   decreaseQuantity: () => {},
+
+  clearCart: () => {},
 });
 
 export function CartProvider({
@@ -103,6 +107,12 @@ export function CartProvider({
     }
   }
 
+  function clearCart() {
+    setCart([]);
+    localStorage.removeItem("cart");
+    sessionStorage.removeItem("cart");
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -111,6 +121,7 @@ export function CartProvider({
         removeFromCart,
         increaseQuantity,
         decreaseQuantity,
+        clearCart,
       }}
     >
       {children}

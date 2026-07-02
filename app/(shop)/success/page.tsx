@@ -1,4 +1,15 @@
+"use client";
+
+import { useEffect } from "react";
+import { useCart } from "../../context/cartcontext";
+
 export default function SuccessPage() {
+  const { clearCart } = useCart();
+
+  useEffect(() => {
+    clearCart();
+  }, [clearCart]);
+
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center">
       <div className="text-center">
