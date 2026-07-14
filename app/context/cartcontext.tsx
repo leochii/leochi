@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useSyncExternalStore } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 export type CartItem = {
   name: string;
@@ -39,9 +39,8 @@ const CartContext = createContext<CartContextType>({
 });
 
 const CART_STORAGE_KEY = "cart";
-const CART_STORAGE_EVENT = "leochi-cart-updated";
 
-function readCartSnapshot(): CartItem[] {
+function readStoredCart(): CartItem[] {
   if (typeof window === "undefined") {
     return [];
   }
@@ -61,37 +60,24 @@ function readCartSnapshot(): CartItem[] {
   }
 }
 
-function subscribeToCartStore(onStoreChange: () => void) {
-  if (typeof window === "undefined") {
-    return () => {};
-  }
-
-  const handleStoreChange = () => onStoreChange();
-
-  window.addEventListener("storage", handleStoreChange);
-  window.addEventListener(CART_STORAGE_EVENT, handleStoreChange);
-
-  return () => {
-    window.removeEventListener("storage", handleStoreChange);
-    window.removeEventListener(CART_STORAGE_EVENT, handleStoreChange);
-  };
-}
-
-function updateCartStorage(cart: CartItem[]) {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
-  window.dispatchEvent(new Event(CART_STORAGE_EVENT));
-}
-
 export function CartProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const cart = useSyncExternalStore(subscribeToCartStore, readCartSnapshot, () => []);
+  const [cart, setCart] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    setCart(readStoredCart());
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  }, [cart]);
 
   function addToCart(item: CartItem) {
     const existingIndex = cart.findIndex(
@@ -105,12 +91,12 @@ export function CartProvider({
 
       updatedCart[existingIndex].quantity += 1;
 
-      updateCartStorage(updatedCart);
+      setCart(updatedCart);
 
       return;
     }
 
-    updateCartStorage([
+    setCart([
       ...cart,
       {
         ...item,
@@ -120,7 +106,7 @@ export function CartProvider({
   }
 
   function removeFromCart(index: number) {
-    updateCartStorage(cart.filter((_, i) => i !== index));
+    setCart(cart.filter((_, i) => i !== index));
   }
 
   function increaseQuantity(index: number) {
@@ -128,7 +114,7 @@ export function CartProvider({
 
     updatedCart[index].quantity += 1;
 
-    updateCartStorage(updatedCart);
+    setCart(updatedCart);
   }
 
   function decreaseQuantity(index: number) {
@@ -137,20 +123,19 @@ export function CartProvider({
     if (updatedCart[index].quantity > 1) {
       updatedCart[index].quantity -= 1;
 
-      updateCartStorage(updatedCart);
+      setCart(updatedCart);
     } else {
       removeFromCart(index);
     }
   }
 
   function clearCart() {
-    if (typeof window === "undefined") {
-      return;
-    }
+    setCart([]);
 
-    window.localStorage.removeItem(CART_STORAGE_KEY);
-    window.sessionStorage.removeItem(CART_STORAGE_KEY);
-    window.dispatchEvent(new Event(CART_STORAGE_EVENT));
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(CART_STORAGE_KEY);
+      window.sessionStorage.removeItem(CART_STORAGE_KEY);
+    }
   }
 
   return (
