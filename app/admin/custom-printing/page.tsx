@@ -3,11 +3,13 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSupabaseServerConfig } from "../../lib/server-env";
+import StatusDropdown from "./StatusDropdown";
+import { type CustomPrintingStatus } from "../../lib/custom-printing";
 
 type CustomPrintingRequest = {
   id: string;
   quote_sequence: number | null;
-  status: string;
+  status: CustomPrintingStatus;
   name: string;
   email: string;
   company: string | null;
@@ -22,7 +24,7 @@ type CustomPrintingRequest = {
   created_at: string;
 };
 
-const statusOptions = ["Quote Requested", "Quote Sent", "Approved", "In Production", "Completed"] as const;
+const statusOptions: CustomPrintingStatus[] = ["Quote Requested", "Quote Sent", "Approved", "In Production", "Completed"];
 
 function formatQuoteNumber(sequence: number | null) {
   if (!sequence) {
@@ -139,7 +141,7 @@ export default async function AdminCustomPrintingPage() {
                     </td>
                     <td className="px-6 py-5 text-sm text-neutral-300">{formatQuoteNumber(request.quote_sequence)}</td>
                     <td className="px-6 py-5">
-                      <span className="rounded-full border border-neutral-700 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-neutral-300">{request.status}</span>
+                      <StatusDropdown requestId={request.id} currentStatus={request.status} />
                     </td>
                     <td className="px-6 py-5 text-sm text-neutral-400">{new Date(request.created_at).toLocaleDateString()}</td>
                   </tr>
