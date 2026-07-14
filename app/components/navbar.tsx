@@ -56,7 +56,7 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 pointer-events-auto border-b border-neutral-800 bg-black/95 backdrop-blur"
         style={{ zIndex: 100 }}
       >
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-5 md:px-8">
+        <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-5 md:h-20 md:px-8">
           <Link href="/" className="text-2xl font-serif text-white md:text-3xl">
             LEOCHI
           </Link>
@@ -103,7 +103,7 @@ export default function Navbar() {
           pointerEvents: isMenuOpen ? "auto" : "none",
         }}
       >
-        <div className="flex h-20 items-center justify-between border-b border-white/10 px-5">
+        <div className="flex h-[72px] items-center justify-between border-b border-white/10 px-5">
           <Link href="/" className="text-2xl font-serif text-white" onClick={() => setIsMenuOpen(false)}>
             LEOCHI
           </Link>
@@ -116,7 +116,7 @@ export default function Navbar() {
           </button>
         </div>
 
-        <nav className="flex h-[calc(100dvh-5rem)] items-center justify-center px-8">
+        <nav className="flex h-[calc(100dvh-72px)] items-center justify-center px-8">
           <div className="flex w-full max-w-md flex-col items-center justify-center gap-10">
             {mobileMenuItems.map((item) => (
               <Link
