@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "../context/cartcontext";
@@ -22,12 +23,33 @@ const navItems = [
 export default function Navbar() {
   const pathname = usePathname();
   const { cart } = useCart();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   if (pathname.startsWith("/admin")) {
     return null;
   }
 
   const isActivePath = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+
+  const mobileMenuItems = [
+    { href: "/shop", label: "SHOP" },
+    { href: "/custom-printing", label: "LEOCHI STUDIO" },
+    { href: "/about", label: "ABOUT" },
+    { href: "/custom-printing#quote-form", label: "CUSTOM PRINTING" },
+    { href: "/cart", label: "CART" },
+  ];
+
+  useEffect(() => {
+    if (!isMenuOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-[100] pointer-events-auto bg-black/95 backdrop-blur border-b border-neutral-800">
@@ -36,7 +58,17 @@ export default function Navbar() {
           LEOCHI
         </Link>
 
-        <nav className="flex items-center gap-4 text-[10px] uppercase tracking-[0.2em] text-white md:gap-8 md:text-sm md:tracking-[0.25em]">
+        <button
+          type="button"
+          onClick={() => setIsMenuOpen((open) => !open)}
+          className="text-xs uppercase tracking-[0.28em] text-white transition hover:text-neutral-300 md:hidden"
+          aria-label="Toggle mobile menu"
+          aria-expanded={isMenuOpen}
+        >
+          MENU
+        </button>
+
+        <nav className="hidden items-center gap-4 text-[10px] uppercase tracking-[0.2em] text-white md:flex md:gap-8 md:text-sm md:tracking-[0.25em]">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -53,6 +85,38 @@ export default function Navbar() {
               {cart.length}
             </span>
           </Link>
+        </nav>
+      </div>
+
+      <div
+        className={`fixed inset-0 z-[120] bg-black transition-opacity duration-300 md:hidden ${isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+      >
+        <div className="flex h-20 items-center justify-between border-b border-white/10 px-5">
+          <Link href="/" className="text-2xl font-serif text-white" onClick={() => setIsMenuOpen(false)}>
+            LEOCHI
+          </Link>
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(false)}
+            className="text-xs uppercase tracking-[0.28em] text-white transition hover:text-neutral-300"
+          >
+            MENU
+          </button>
+        </div>
+
+        <nav className="flex h-[calc(100dvh-5rem)] items-center justify-center px-8">
+          <div className="flex w-full max-w-md flex-col items-center gap-7">
+            {mobileMenuItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={() => setIsMenuOpen(false)}
+                className="text-center font-serif text-4xl tracking-[0.06em] text-[#f7f0e6] transition duration-300 hover:text-white"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </nav>
       </div>
     </header>
