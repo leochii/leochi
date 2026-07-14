@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { getSiteUrl, getStripeSecretKey } from "../../lib/server-env";
 
 interface CartItem {
   name: string;
@@ -8,40 +9,53 @@ interface CartItem {
   quantity: number;
 }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+export const runtime = "nodejs";
+
+function getStripeClient() {
+  return new Stripe(getStripeSecretKey());
+}
 
 export async function POST(req: Request) {
-  const { cartItems } = await req.json() as { cartItems: CartItem[] };
+  try {
+    const { cartItems } = (await req.json()) as { cartItems?: CartItem[] };
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
+    if (!Array.isArray(cartItems) || cartItems.length === 0) {
+      return NextResponse.json({ error: "Cart is empty." }, { status: 400 });
+    }
 
-    line_items: cartItems.map((item: CartItem) => ({
-      price_data: {
-        currency: "cad",
-        product_data: {
-          name: `${item.name} (${item.size})`,
+    const stripe = getStripeClient();
+    const origin = req.headers.get("origin") || undefined;
+    const siteUrl = getSiteUrl(origin);
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: cartItems.map((item: CartItem) => ({
+        price_data: {
+          currency: "cad",
+          product_data: {
+            name: `${item.name} (${item.size})`,
+          },
+          unit_amount: Math.round(item.price * 100),
         },
-        unit_amount: item.price * 100,
+        quantity: item.quantity,
+      })),
+      mode: "payment",
+      metadata: {
+        products: JSON.stringify(cartItems),
       },
-      quantity: item.quantity,
-    })),
+      success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/cancel`,
+      billing_address_collection: "required",
+      phone_number_collection: {
+        enabled: true,
+      },
+    });
 
-    mode: "payment",
-
-metadata: {
-  products: JSON.stringify(cartItems),
-},
-    success_url: "https://leochi.co/success",
-cancel_url: "https://leochi.co/cart",
-
-billing_address_collection: "required",
-phone_number_collection: {
-  enabled: true,
-},
-  });
-
-  return NextResponse.json({
-    url: session.url,
-  });
+    return NextResponse.json({
+      url: session.url,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to create checkout session.";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

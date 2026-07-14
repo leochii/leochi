@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getSupabaseServerConfig } from "../../../../lib/server-env";
 
 const VALID_STATUSES = [
   "pending",
@@ -23,24 +24,12 @@ export async function POST(req: Request) {
   console.log("POST /api/admin/orders/update called:", { requestTimestamp });
 
   try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const { url: supabaseUrl, serviceRoleKey: supabaseKey } = getSupabaseServerConfig();
 
     console.log("Supabase credentials present:", {
       hasUrl: !!supabaseUrl,
       hasKey: !!supabaseKey,
     });
-
-    if (!supabaseUrl || !supabaseKey) {
-      console.error(
-        "Supabase credentials missing:",
-        { hasUrl: !!supabaseUrl, hasKey: !!supabaseKey }
-      );
-      return NextResponse.json(
-        { success: false, error: "Server configuration error: Supabase credentials not configured" },
-        { status: 500 }
-      );
-    }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 

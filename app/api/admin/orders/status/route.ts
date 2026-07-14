@@ -1,20 +1,11 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getSupabaseServerConfig } from "../../../../lib/server-env";
 
 export async function PATCH(request: Request) {
   try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-    if (!supabaseUrl || !supabaseKey) {
-      console.error("Supabase credentials missing");
-      return NextResponse.json(
-        { error: "Server configuration error" },
-        { status: 500 }
-      );
-    }
-
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const { url, serviceRoleKey } = getSupabaseServerConfig();
+    const supabase = createClient(url, serviceRoleKey);
     const { id, status } = await request.json();
 
     const { error } = await supabase

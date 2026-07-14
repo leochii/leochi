@@ -3,16 +3,12 @@ import OrdersTable from "./OrdersTable";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { getSupabaseServerConfig } from "../lib/server-env";
 
 const getSupabaseClient = () => {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const { url, serviceRoleKey } = getSupabaseServerConfig();
 
-  if (!url || !key) {
-    throw new Error("Supabase credentials not configured");
-  }
-
-  return createClient(url, key);
+  return createClient(url, serviceRoleKey);
 };
 
 export default async function AdminPage() {

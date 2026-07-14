@@ -13,7 +13,7 @@ export default function Navbar() {
 }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-auto bg-black border-b border-neutral-800">
+    <header className="fixed top-0 left-0 right-0 z-[100] pointer-events-auto bg-black/95 backdrop-blur border-b border-neutral-800">
       <div className="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between"
         >
           <Link
@@ -25,11 +25,11 @@ export default function Navbar() {
 
         <nav className="flex gap-10 uppercase tracking-[0.25em] text-sm text-white">
 
-          <Link href="/shop">Shop</Link>
+          <Link href="/shop" className="hover:text-neutral-300 transition">Shop</Link>
 
-          <Link href="/about">About</Link>
+          <Link href="/about" className="hover:text-neutral-300 transition">About</Link>
 
-          <Link href="/cart">
+          <Link href="/cart" className="hover:text-neutral-300 transition">
             Cart
             <span className="ml-2 bg-white text-black px-2 py-1 text-xs font-bold">
               {cart.length}
