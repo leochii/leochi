@@ -52,44 +52,57 @@ export default function Navbar() {
   }, [isMenuOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-[100] pointer-events-auto bg-black/95 backdrop-blur border-b border-neutral-800">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-5 md:px-8">
-        <Link href="/" className="text-2xl font-serif text-white md:text-3xl">
-          LEOCHI
-        </Link>
-
-        <button
-          type="button"
-          onClick={() => setIsMenuOpen((open) => !open)}
-          className="text-xs uppercase tracking-[0.28em] text-white transition hover:text-neutral-300 md:hidden"
-          aria-label="Toggle mobile menu"
-          aria-expanded={isMenuOpen}
-        >
-          MENU
-        </button>
-
-        <nav className="hidden items-center gap-4 text-[10px] uppercase tracking-[0.2em] text-white md:flex md:gap-8 md:text-sm md:tracking-[0.25em]">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`transition ${isActivePath(item.href) ? "text-white" : "text-neutral-400 hover:text-neutral-200"}`}
-            >
-              {item.label}
-            </Link>
-          ))}
-
-          <Link href="/cart" className="transition hover:text-neutral-300">
-            CART
-            <span className="ml-2 bg-white px-2 py-1 text-[10px] font-bold text-black md:text-xs">
-              {cart.length}
-            </span>
+    <>
+      <header
+        className="fixed top-0 left-0 right-0 pointer-events-auto border-b border-neutral-800 bg-black/95 backdrop-blur"
+        style={{ zIndex: 100 }}
+      >
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-5 md:px-8">
+          <Link href="/" className="text-2xl font-serif text-white md:text-3xl">
+            LEOCHI
           </Link>
-        </nav>
-      </div>
+
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen((open) => !open)}
+            className="text-xs uppercase tracking-[0.28em] text-white transition hover:text-neutral-300 md:hidden"
+            aria-label="Toggle mobile menu"
+            aria-expanded={isMenuOpen}
+          >
+            MENU
+          </button>
+
+          <nav className="hidden items-center gap-4 text-[10px] uppercase tracking-[0.2em] text-white md:flex md:gap-8 md:text-sm md:tracking-[0.25em]">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`transition ${isActivePath(item.href) ? "text-white" : "text-neutral-400 hover:text-neutral-200"}`}
+              >
+                {item.label}
+              </Link>
+            ))}
+
+            <Link href="/cart" className="transition hover:text-neutral-300">
+              CART
+              <span className="ml-2 bg-white px-2 py-1 text-[10px] font-bold text-black md:text-xs">
+                {cart.length}
+              </span>
+            </Link>
+          </nav>
+        </div>
+      </header>
 
       <div
-        className={`fixed inset-0 z-[9999] bg-[#000000] transition-opacity duration-500 md:hidden ${isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+        className="fixed inset-0 transition-opacity duration-500 md:hidden"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 9999,
+          background: "rgb(0, 0, 0)",
+          opacity: isMenuOpen ? 1 : 0,
+          pointerEvents: isMenuOpen ? "auto" : "none",
+        }}
       >
         <div className="flex h-20 items-center justify-between border-b border-white/10 px-5">
           <Link href="/" className="text-2xl font-serif text-white" onClick={() => setIsMenuOpen(false)}>
@@ -119,6 +132,6 @@ export default function Navbar() {
           </div>
         </nav>
       </div>
-    </header>
+    </>
   );
 }
