@@ -10,6 +10,7 @@ import {
   formatQuoteNumber,
   sanitizeFilename,
 } from "../../lib/custom-printing";
+import { getCustomPrintingStatusEmail } from "../../lib/custom-printing-status";
 import { getSupabaseServerConfig } from "../../lib/server-env";
 
 export const runtime = "nodejs";
@@ -153,6 +154,8 @@ export async function POST(request: Request) {
     }
 
     const quoteNumber = formatQuoteNumber(insertedRequest.quote_sequence);
+    const siteUrl = new URL(request.url).origin;
+    const statusUrl = `${siteUrl}/custom-printing/success?request=${encodeURIComponent(insertedRequest.id)}&quote=${encodeURIComponent(quoteNumber)}&status=${encodeURIComponent(insertedRequest.status)}`;
 
     const resend = new Resend(resendApiKey);
     const { error: emailError } = await resend.emails.send({
@@ -179,6 +182,29 @@ export async function POST(request: Request) {
 
     if (emailError) {
       console.error("[CUSTOM_PRINTING] Resend error:", emailError);
+    }
+
+    const customerStatusEmail = getCustomPrintingStatusEmail({
+      status: insertedRequest.status,
+      customerName: name.trim(),
+      quoteNumber,
+      quantity: parsedQuantity,
+      garmentType: garmentType.trim(),
+      fileUrls: uploadedFileUrls,
+      statusUrl,
+    });
+
+    const { error: customerEmailError } = await resend.emails.send({
+      from: "LEOCHI <orders@leochi.co>",
+      to: email.trim(),
+      replyTo: "support@leochi.co",
+      subject: customerStatusEmail.subject,
+      html: customerStatusEmail.html,
+      text: customerStatusEmail.text,
+    });
+
+    if (customerEmailError) {
+      console.error("[CUSTOM_PRINTING] Customer status email error:", customerEmailError);
     }
 
     return NextResponse.json({

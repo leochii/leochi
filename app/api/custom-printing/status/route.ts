@@ -2,8 +2,9 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
-import { getSupabaseServerConfig } from "../../../lib/server-env";
+import { getSiteUrl, getSupabaseServerConfig } from "../../../lib/server-env";
 import { getCustomPrintingStatusEmail, isCustomPrintingStatus } from "../../../lib/custom-printing-status";
+import { formatQuoteNumber } from "../../../lib/custom-printing";
 
 export const runtime = "nodejs";
 
@@ -46,7 +47,7 @@ export async function POST(request: Request) {
       .from("custom_printing_requests")
       .update({ status })
       .eq("id", requestId)
-      .select("id, email, name, status")
+      .select("id, email, name, status, quote_sequence, quantity, garment_type, file_url, file_urls")
       .single();
 
     if (updateError) {
@@ -54,29 +55,48 @@ export async function POST(request: Request) {
       return jsonError("Failed to update request status.", 500);
     }
 
-    const emailContent = getCustomPrintingStatusEmail(updatedRequest.status, updatedRequest.name);
+    const siteUrl = getSiteUrl(new URL(request.url).origin);
+    const quoteNumber = formatQuoteNumber(updatedRequest.quote_sequence ?? 0);
+    const statusUrl = `${siteUrl}/custom-printing/success?request=${encodeURIComponent(updatedRequest.id)}&quote=${encodeURIComponent(quoteNumber)}&status=${encodeURIComponent(updatedRequest.status)}`;
+    const fileUrls = Array.isArray(updatedRequest.file_urls)
+      ? updatedRequest.file_urls.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+      : [];
 
-    if (emailContent) {
-      const resendApiKey = process.env.RESEND_API_KEY?.trim();
+    const normalizedFileUrls = fileUrls.length > 0
+      ? fileUrls
+      : typeof updatedRequest.file_url === "string" && updatedRequest.file_url.trim().length > 0
+        ? [updatedRequest.file_url]
+        : [];
 
-      if (!resendApiKey) {
-        return jsonError("RESEND_API_KEY is required.", 500);
-      }
+    const emailContent = getCustomPrintingStatusEmail({
+      status: updatedRequest.status,
+      customerName: updatedRequest.name,
+      quoteNumber,
+      quantity: updatedRequest.quantity,
+      garmentType: updatedRequest.garment_type,
+      fileUrls: normalizedFileUrls,
+      statusUrl,
+    });
 
-      const resend = new Resend(resendApiKey);
-      const { error: emailError } = await resend.emails.send({
-        from: "LEOCHI <orders@leochi.co>",
-        to: updatedRequest.email,
-        replyTo: "support@leochi.co",
-        subject: emailContent.subject,
-        html: emailContent.html,
-        text: emailContent.text,
-      });
+    const resendApiKey = process.env.RESEND_API_KEY?.trim();
 
-      if (emailError) {
-        console.error("[CUSTOM_PRINTING_STATUS] Resend error:", emailError);
-        return jsonError("Status updated, but notification email failed to send.", 500);
-      }
+    if (!resendApiKey) {
+      return jsonError("RESEND_API_KEY is required.", 500);
+    }
+
+    const resend = new Resend(resendApiKey);
+    const { error: emailError } = await resend.emails.send({
+      from: "LEOCHI <orders@leochi.co>",
+      to: updatedRequest.email,
+      replyTo: "support@leochi.co",
+      subject: emailContent.subject,
+      html: emailContent.html,
+      text: emailContent.text,
+    });
+
+    if (emailError) {
+      console.error("[CUSTOM_PRINTING_STATUS] Resend error:", emailError);
+      return jsonError("Status updated, but notification email failed to send.", 500);
     }
 
     return NextResponse.json({ success: true, status: updatedRequest.status });
