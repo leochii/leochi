@@ -58,19 +58,8 @@ export async function POST(request: Request) {
       return jsonError("Choose a garment type.");
     }
 
-    if (typeof desiredDeliveryDate !== "string" || desiredDeliveryDate.trim().length === 0) {
-      return jsonError("Select a desired delivery date.");
-    }
-
-    if (printDetails.length === 0) {
-      return jsonError("Select at least one print detail.");
-    }
-
+    const normalizedDesiredDeliveryDate = typeof desiredDeliveryDate === "string" && desiredDeliveryDate.trim().length > 0 ? desiredDeliveryDate.trim() : undefined;
     const normalizedPrintDetails = printDetails.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
-
-    if (normalizedPrintDetails.length === 0) {
-      return jsonError("Select at least one print detail.");
-    }
 
     const normalizedFiles = designFiles.filter((item): item is File => item instanceof File && item.size > 0);
 
@@ -147,7 +136,7 @@ export async function POST(request: Request) {
         instagram_or_website: trimmedInstagramOrWebsite,
         quantity: parsedQuantity,
         garment_type: garmentType.trim(),
-        desired_delivery_date: desiredDeliveryDate,
+        desired_delivery_date: normalizedDesiredDeliveryDate,
         print_details: normalizedPrintDetails,
         notes: trimmedNotes,
         file_url: uploadedFileUrls[0],
@@ -181,7 +170,7 @@ export async function POST(request: Request) {
         instagramOrWebsite: trimmedInstagramOrWebsite ?? undefined,
         quantity: parsedQuantity,
         garmentType: garmentType.trim(),
-        desiredDeliveryDate,
+        desiredDeliveryDate: normalizedDesiredDeliveryDate,
         printDetails: normalizedPrintDetails,
         notes: trimmedNotes ?? undefined,
         fileUrls: uploadedFileUrls,

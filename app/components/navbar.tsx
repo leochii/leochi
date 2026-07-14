@@ -7,15 +7,15 @@ import { useCart } from "../context/cartcontext";
 const navItems = [
   {
     href: "/shop",
-    label: "Shop",
+    label: "SHOP",
   },
   {
     href: "/custom-printing",
-    label: "Custom Printing",
+    label: "LEOCHI STUDIO",
   },
   {
     href: "/about",
-    label: "About",
+    label: "ABOUT",
   },
 ];
 
@@ -48,7 +48,7 @@ export default function Navbar() {
           ))}
 
           <Link href="/cart" className="transition hover:text-neutral-300">
-            Cart
+            CART
             <span className="ml-2 bg-white px-2 py-1 text-[10px] font-bold text-black md:text-xs">
               {cart.length}
             </span>
