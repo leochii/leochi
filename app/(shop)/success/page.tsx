@@ -1,24 +1,21 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useCart } from "../../context/cartcontext";
+import SuccessCartReset from "../../components/success-cart-reset";
 
-export default function SuccessPage() {
-  const { clearCart } = useCart();
-  const [sessionId, setSessionId] = useState<string | null>(null);
+type SuccessPageProps = {
+  searchParams: Promise<{
+    session_id?: string | string[];
+  }>;
+};
 
-  useEffect(() => {
-    clearCart();
-
-    if (typeof window !== "undefined") {
-      const value = new URLSearchParams(window.location.search).get("session_id");
-      setSessionId(value);
-    }
-  }, [clearCart]);
+export default async function SuccessPage({ searchParams }: SuccessPageProps) {
+  const params = await searchParams;
+  const sessionId = Array.isArray(params.session_id)
+    ? params.session_id[0]
+    : params.session_id ?? null;
 
   return (
     <main className="min-h-screen bg-black text-white pt-28 pb-16 px-6 md:px-10">
+      <SuccessCartReset />
       <div className="max-w-4xl mx-auto border border-neutral-800 bg-neutral-950/70 rounded-2xl overflow-hidden">
         <div className="px-7 py-8 md:px-10 md:py-10 border-b border-neutral-800 bg-gradient-to-br from-neutral-950 to-black">
           <p className="uppercase tracking-[0.28em] text-[11px] text-neutral-500 mb-4">LEOCHI</p>

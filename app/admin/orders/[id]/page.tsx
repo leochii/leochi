@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import Image from "next/image";
 import OrderManager from "../../OrderManager";
 import { getSupabaseServerConfig } from "../../../lib/server-env";
 
@@ -80,9 +81,11 @@ export default async function OrderPage({
                 key={index}
                 className="flex items-center gap-4 border border-neutral-800 rounded-xl p-4"
               >
-                <img
+                <Image
                   src={product.image}
                   alt={product.name}
+                  width={80}
+                  height={80}
                   className="w-20 h-20 rounded-lg object-cover"
                 />
 

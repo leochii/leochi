@@ -1,4 +1,13 @@
-export const products = [
+export type Product = {
+  slug: string;
+  name: string;
+  price: number;
+  images: string[];
+  category?: string;
+  description?: string;
+};
+
+export const products: Product[] = [
   {
     slug: "Chem-Trail",
     name: "Chem-Trail",

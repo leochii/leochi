@@ -21,20 +21,13 @@ const VALID_CARRIERS = [
 
 export async function POST(req: Request) {
   const requestTimestamp = new Date().toISOString();
-  console.log("POST /api/admin/orders/update called:", { requestTimestamp });
 
   try {
     const { url: supabaseUrl, serviceRoleKey: supabaseKey } = getSupabaseServerConfig();
 
-    console.log("Supabase credentials present:", {
-      hasUrl: !!supabaseUrl,
-      hasKey: !!supabaseKey,
-    });
-
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const body = await req.json();
-    console.log("Incoming request body:", body);
 
     const { id, status, tracking_number, carrier } = body;
     const payloadStatus = status;
@@ -79,8 +72,6 @@ export async function POST(req: Request) {
       carrier: carrier || null,
     };
 
-    console.log("Supabase update payload:", updatePayload);
-
     const { error } = await supabase
       .from("orders")
       .update(updatePayload)
@@ -94,7 +85,6 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("Order updated successfully:", id);
     return NextResponse.json({ success: true });
   } catch (error) {
     const errorMessage =

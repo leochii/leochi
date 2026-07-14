@@ -102,12 +102,21 @@ const averageOrder =
     Orders
   </h1>
 
-  <Link
-  href="/api/admin/logout"
-  className="border border-neutral-700 rounded-lg px-4 py-2 text-sm hover:bg-neutral-800 transition"
->
-  Logout
-</Link>
+  <div className="flex items-center gap-3">
+    <Link
+      href="/admin/custom-printing"
+      className="border border-neutral-700 rounded-lg px-4 py-2 text-sm hover:bg-neutral-800 transition"
+    >
+      Custom Printing
+    </Link>
+
+    <Link
+      href="/api/admin/logout"
+      className="border border-neutral-700 rounded-lg px-4 py-2 text-sm hover:bg-neutral-800 transition"
+    >
+      Logout
+    </Link>
+  </div>
 
 </div>
   <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">

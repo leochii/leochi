@@ -48,6 +48,12 @@ npm run dev
 npm run build
 ```
 
+## Custom Printing Setup
+
+1. Run the SQL in [supabase/custom_printing_requests.sql](/Users/nimaadiidar/leochi/supabase/custom_printing_requests.sql) to create the `custom_printing_requests` table and the `custom-printing-designs` storage bucket.
+2. Verify your Resend domain can send from `orders@leochi.co`.
+3. Confirm the uploaded design bucket stays public if you want admins to open the stored file URLs directly.
+
 ## Deploy (Vercel)
 
 1. Add all required environment variables in Vercel Project Settings.

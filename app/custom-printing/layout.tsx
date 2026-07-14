@@ -2,7 +2,7 @@ import Navbar from "../components/navbar";
 import SiteFooter from "../components/site-footer";
 import { CartProvider } from "../context/cartcontext";
 
-export default function ShopLayout({
+export default function CustomPrintingLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -10,9 +10,7 @@ export default function ShopLayout({
   return (
     <CartProvider>
       <Navbar />
-
       {children}
-
       <SiteFooter />
     </CartProvider>
   );
