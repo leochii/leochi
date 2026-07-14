@@ -35,7 +35,6 @@ export default function Navbar() {
     { href: "/shop", label: "SHOP" },
     { href: "/custom-printing", label: "LEOCHI STUDIO" },
     { href: "/about", label: "ABOUT" },
-    { href: "/custom-printing#quote-form", label: "CUSTOM PRINTING" },
     { href: "/cart", label: "CART" },
   ];
 
