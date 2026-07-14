@@ -6,15 +6,31 @@ import { getSupabaseServerConfig } from "../../lib/server-env";
 
 type CustomPrintingRequest = {
   id: string;
+  quote_sequence: number | null;
+  status: string;
   name: string;
   email: string;
   company: string | null;
+  instagram_or_website: string | null;
   quantity: number;
   garment_type: string;
+  desired_delivery_date: string | null;
+  print_details: string[] | null;
   notes: string | null;
   file_url: string;
+  file_urls: string[] | null;
   created_at: string;
 };
+
+const statusOptions = ["Quote Requested", "Quote Sent", "Approved", "In Production", "Completed"] as const;
+
+function formatQuoteNumber(sequence: number | null) {
+  if (!sequence) {
+    return "Pending";
+  }
+
+  return `LCH-${String(sequence).padStart(6, "0")}`;
+}
 
 function getSupabaseClient() {
   const { url, serviceRoleKey } = getSupabaseServerConfig();
@@ -55,6 +71,8 @@ export default async function AdminCustomPrintingPage() {
     );
   }
 
+  const requestRows = (requests as CustomPrintingRequest[]) ?? [];
+
   return (
     <main className="min-h-screen bg-black px-6 pb-10 pt-32 text-white md:px-10">
       <div className="mx-auto max-w-7xl">
@@ -72,49 +90,70 @@ export default async function AdminCustomPrintingPage() {
           </Link>
         </div>
 
+        <div className="mb-8 grid gap-4 md:grid-cols-5">
+          {statusOptions.map((status) => (
+            <div key={status} className="rounded-[1.4rem] border border-neutral-800 bg-neutral-950 px-4 py-4">
+              <p className="text-[10px] uppercase tracking-[0.22em] text-neutral-500">Status</p>
+              <p className="mt-3 text-sm text-neutral-100">{status}</p>
+            </div>
+          ))}
+        </div>
+
         <div className="overflow-hidden rounded-[1.5rem] border border-neutral-800 bg-neutral-950">
-          <div className="hidden grid-cols-[1.2fr_1fr_0.7fr_0.9fr_1fr_0.9fr] gap-4 border-b border-neutral-800 px-6 py-4 text-[11px] uppercase tracking-[0.24em] text-neutral-500 lg:grid">
-            <span>Client</span>
-            <span>Company</span>
-            <span>Quantity</span>
-            <span>Garment</span>
-            <span>Design</span>
-            <span>Received</span>
-          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-neutral-800 text-left">
+              <thead className="bg-neutral-950">
+                <tr>
+                  <th className="px-6 py-4 text-[10px] uppercase tracking-[0.22em] text-neutral-500">Customer name</th>
+                  <th className="px-6 py-4 text-[10px] uppercase tracking-[0.22em] text-neutral-500">Company</th>
+                  <th className="px-6 py-4 text-[10px] uppercase tracking-[0.22em] text-neutral-500">Quantity</th>
+                  <th className="px-6 py-4 text-[10px] uppercase tracking-[0.22em] text-neutral-500">Uploaded files</th>
+                  <th className="px-6 py-4 text-[10px] uppercase tracking-[0.22em] text-neutral-500">Quote number</th>
+                  <th className="px-6 py-4 text-[10px] uppercase tracking-[0.22em] text-neutral-500">Current status</th>
+                  <th className="px-6 py-4 text-[10px] uppercase tracking-[0.22em] text-neutral-500">Date submitted</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-800">
+                {requestRows.map((request) => (
+                  <tr key={request.id} className="align-top">
+                    <td className="px-6 py-5">
+                      <p className="font-medium text-white">{request.name}</p>
+                      <p className="mt-2 break-all text-sm text-neutral-400">{request.email}</p>
+                    </td>
+                    <td className="px-6 py-5 text-sm text-neutral-300">{request.company ?? "No company provided"}</td>
+                    <td className="px-6 py-5 text-sm text-neutral-300">{request.quantity} pieces</td>
+                    <td className="px-6 py-5">
+                      <div className="flex flex-wrap gap-2">
+                        {(request.file_urls && request.file_urls.length > 0 ? request.file_urls : [request.file_url]).map((fileUrl, index) => (
+                          <a
+                            key={`${fileUrl}-${index}`}
+                            href={fileUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center rounded-full border border-neutral-700 px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-white transition hover:border-neutral-500 hover:bg-neutral-900"
+                          >
+                            File {index + 1}
+                          </a>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-6 py-5 text-sm text-neutral-300">{formatQuoteNumber(request.quote_sequence)}</td>
+                    <td className="px-6 py-5">
+                      <span className="rounded-full border border-neutral-700 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-neutral-300">{request.status}</span>
+                    </td>
+                    <td className="px-6 py-5 text-sm text-neutral-400">{new Date(request.created_at).toLocaleDateString()}</td>
+                  </tr>
+                ))}
 
-          <div className="divide-y divide-neutral-800">
-            {(requests as CustomPrintingRequest[]).map((request) => (
-              <article key={request.id} className="grid gap-5 px-6 py-6 lg:grid-cols-[1.2fr_1fr_0.7fr_0.9fr_1fr_0.9fr] lg:items-start">
-                <div>
-                  <p className="text-lg font-medium text-white">{request.name}</p>
-                  <p className="mt-2 break-all text-sm text-neutral-400">{request.email}</p>
-                  {request.notes ? <p className="mt-3 text-sm leading-6 text-neutral-500">{request.notes}</p> : null}
-                </div>
-
-                <div className="text-sm text-neutral-300">{request.company ?? "-"}</div>
-
-                <div className="text-sm text-neutral-300">{request.quantity}</div>
-
-                <div className="text-sm text-neutral-300">{request.garment_type}</div>
-
-                <div>
-                  <a
-                    href={request.file_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center rounded-full border border-neutral-700 px-4 py-2 text-xs uppercase tracking-[0.22em] text-white transition hover:border-neutral-500 hover:bg-neutral-900"
-                  >
-                    Open File
-                  </a>
-                </div>
-
-                <div className="text-sm text-neutral-400">{new Date(request.created_at).toLocaleDateString()}</div>
-              </article>
-            ))}
-
-            {requests?.length === 0 ? (
-              <div className="px-6 py-16 text-center text-neutral-400">No custom printing requests yet.</div>
-            ) : null}
+                {requestRows.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="px-6 py-16 text-center text-neutral-400">
+                      No custom printing requests yet.
+                    </td>
+                  </tr>
+                ) : null}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

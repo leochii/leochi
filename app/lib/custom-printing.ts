@@ -1,6 +1,6 @@
 export const CUSTOM_PRINTING_STORAGE_BUCKET = "custom-printing-designs";
 
-export const CUSTOM_PRINTING_EMAIL_DESTINATION = "orders@leochi.co";
+export const CUSTOM_PRINTING_EMAIL_DESTINATION = "support@leochi.co";
 
 export const GARMENT_OPTIONS = [
   "T-Shirts",
@@ -8,19 +8,44 @@ export const GARMENT_OPTIONS = [
   "Crewnecks",
   "Tote Bags",
   "Workwear",
+  "Restaurant Uniforms",
   "Event Merchandise",
-  "Small Business Merchandise",
 ] as const;
+
+export const PRINT_DETAIL_OPTIONS = [
+  "Front Print",
+  "Back Print",
+  "Sleeve Print",
+  "Neck Label",
+  "Embroidery",
+  "DTF Printing",
+  "Screen Printing",
+] as const;
+
+export const CUSTOM_PRINTING_STATUS_FLOW = [
+  "Quote Requested",
+  "Quote Sent",
+  "Approved",
+  "In Production",
+  "Completed",
+] as const;
+
+export type CustomPrintingStatus = (typeof CUSTOM_PRINTING_STATUS_FLOW)[number];
 
 type CustomPrintingEmailPayload = {
   requestId: string;
+  quoteNumber: string;
+  status: CustomPrintingStatus;
   name: string;
   email: string;
   company?: string;
+  instagramOrWebsite?: string;
   quantity: number;
   garmentType: string;
+  desiredDeliveryDate?: string;
+  printDetails: string[];
   notes?: string;
-  fileUrl: string;
+  fileUrls: string[];
 };
 
 function escapeHtml(value: string) {
@@ -42,13 +67,48 @@ export function sanitizeFilename(filename: string) {
     .slice(0, 120) || "design-file";
 }
 
+export function formatQuoteNumber(sequence: number | string) {
+  const value = typeof sequence === "number" ? sequence : Number.parseInt(sequence, 10);
+
+  if (!Number.isFinite(value) || value < 1) {
+    return "LCH-000000";
+  }
+
+  return `LCH-${String(value).padStart(6, "0")}`;
+}
+
+function renderPrintDetails(printDetails: string[]) {
+  if (printDetails.length === 0) {
+    return "Not specified";
+  }
+
+  return printDetails.map((item) => `<span style="display:inline-block;margin:4px 6px 0 0;padding:8px 12px;border:1px solid #2f2f2f;border-radius:999px;background:#111111;color:#ffffff;font-size:12px;">${escapeHtml(item)}</span>`).join("");
+}
+
+function renderFileLinks(fileUrls: string[]) {
+  return fileUrls
+    .map((url, index) => {
+      const safeUrl = escapeHtml(url);
+
+      return `
+        <div style="margin-top:10px;">
+          <a href="${safeUrl}" style="color:#ffffff;text-decoration:none;border-bottom:1px solid #525252;padding-bottom:2px;">Uploaded File ${index + 1}</a>
+        </div>
+      `;
+    })
+    .join("");
+}
+
 export function buildCustomPrintingEmailHtml(payload: CustomPrintingEmailPayload) {
   const name = escapeHtml(payload.name);
   const email = escapeHtml(payload.email);
   const company = payload.company ? escapeHtml(payload.company) : "Not provided";
+  const instagramOrWebsite = payload.instagramOrWebsite ? escapeHtml(payload.instagramOrWebsite) : "Not provided";
   const garmentType = escapeHtml(payload.garmentType);
+  const desiredDeliveryDate = payload.desiredDeliveryDate ? escapeHtml(payload.desiredDeliveryDate) : "Flexible";
   const notes = payload.notes ? escapeHtml(payload.notes).replaceAll("\n", "<br />") : "No additional notes.";
-  const fileUrl = escapeHtml(payload.fileUrl);
+  const printDetails = renderPrintDetails(payload.printDetails);
+  const fileLinks = renderFileLinks(payload.fileUrls);
 
   return `
     <!DOCTYPE html>
@@ -78,8 +138,16 @@ export function buildCustomPrintingEmailHtml(payload: CustomPrintingEmailPayload
 
                     <table width="100%" cellpadding="0" cellspacing="0" style="background:#111111; border:1px solid #262626; margin-bottom:24px;">
                       <tr>
-                        <td style="padding:16px 18px; color:#a3a3a3; font-size:13px;">Request ID</td>
-                        <td style="padding:16px 18px; color:#ffffff; font-size:13px; text-align:right;">${payload.requestId}</td>
+                        <td style="padding:16px 18px; color:#a3a3a3; font-size:13px;">Quote Number</td>
+                        <td style="padding:16px 18px; color:#ffffff; font-size:13px; text-align:right;">${payload.quoteNumber}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:16px 18px; color:#a3a3a3; font-size:13px; border-top:1px solid #262626;">Request ID</td>
+                        <td style="padding:16px 18px; color:#ffffff; font-size:13px; text-align:right; border-top:1px solid #262626;">${payload.requestId}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:16px 18px; color:#a3a3a3; font-size:13px; border-top:1px solid #262626;">Status</td>
+                        <td style="padding:16px 18px; color:#ffffff; font-size:13px; text-align:right; border-top:1px solid #262626;">${escapeHtml(payload.status)}</td>
                       </tr>
                       <tr>
                         <td style="padding:16px 18px; color:#a3a3a3; font-size:13px; border-top:1px solid #262626;">Name</td>
@@ -94,6 +162,10 @@ export function buildCustomPrintingEmailHtml(payload: CustomPrintingEmailPayload
                         <td style="padding:16px 18px; color:#ffffff; font-size:13px; text-align:right; border-top:1px solid #262626;">${company}</td>
                       </tr>
                       <tr>
+                        <td style="padding:16px 18px; color:#a3a3a3; font-size:13px; border-top:1px solid #262626;">Instagram / Website</td>
+                        <td style="padding:16px 18px; color:#ffffff; font-size:13px; text-align:right; border-top:1px solid #262626;">${instagramOrWebsite}</td>
+                      </tr>
+                      <tr>
                         <td style="padding:16px 18px; color:#a3a3a3; font-size:13px; border-top:1px solid #262626;">Garment</td>
                         <td style="padding:16px 18px; color:#ffffff; font-size:13px; text-align:right; border-top:1px solid #262626;">${garmentType}</td>
                       </tr>
@@ -101,15 +173,25 @@ export function buildCustomPrintingEmailHtml(payload: CustomPrintingEmailPayload
                         <td style="padding:16px 18px; color:#a3a3a3; font-size:13px; border-top:1px solid #262626;">Quantity</td>
                         <td style="padding:16px 18px; color:#ffffff; font-size:13px; text-align:right; border-top:1px solid #262626;">${payload.quantity}</td>
                       </tr>
+                      <tr>
+                        <td style="padding:16px 18px; color:#a3a3a3; font-size:13px; border-top:1px solid #262626;">Desired Delivery Date</td>
+                        <td style="padding:16px 18px; color:#ffffff; font-size:13px; text-align:right; border-top:1px solid #262626;">${desiredDeliveryDate}</td>
+                      </tr>
                     </table>
+
+                    <div style="margin-bottom:24px; padding:18px; border:1px solid #262626; background:#111111;">
+                      <div style="margin-bottom:10px; color:#a3a3a3; text-transform:uppercase; letter-spacing:1px; font-size:12px;">Print Details</div>
+                      <div>${printDetails}</div>
+                    </div>
 
                     <div style="margin-bottom:24px; padding:18px; border:1px solid #262626; background:#111111;">
                       <div style="margin-bottom:10px; color:#a3a3a3; text-transform:uppercase; letter-spacing:1px; font-size:12px;">Additional Notes</div>
                       <div style="color:#ffffff; line-height:1.7; font-size:14px;">${notes}</div>
                     </div>
 
-                    <div style="text-align:center;">
-                      <a href="${fileUrl}" style="display:inline-block; padding:12px 24px; background:#ffffff; color:#000000; text-decoration:none; letter-spacing:1px; text-transform:uppercase; font-size:12px; font-weight:700;">Open Uploaded Design</a>
+                    <div style="padding:18px; border:1px solid #262626; background:#111111;">
+                      <div style="margin-bottom:10px; color:#a3a3a3; text-transform:uppercase; letter-spacing:1px; font-size:12px;">Uploaded Files</div>
+                      ${fileLinks}
                     </div>
                   </td>
                 </tr>
