@@ -89,7 +89,7 @@ export default function Navbar() {
       </div>
 
       <div
-        className={`fixed inset-0 z-[120] bg-[#000000] transition-opacity duration-500 md:hidden ${isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+        className={`fixed inset-0 z-[9999] bg-[#000000] transition-opacity duration-500 md:hidden ${isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
       >
         <div className="flex h-20 items-center justify-between border-b border-white/10 px-5">
           <Link href="/" className="text-2xl font-serif text-white" onClick={() => setIsMenuOpen(false)}>
