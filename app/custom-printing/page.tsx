@@ -51,19 +51,23 @@ export default function CustomPrintingPage() {
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f7f0e6]/20 to-transparent" />
       </div>
 
-      <section className="relative px-6 pb-24 pt-12 md:px-10 md:pb-28 md:pt-24">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+      <section className="relative px-6 pb-32 pt-16 md:px-10 md:pb-36 md:pt-28">
+        <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-[1fr_0.82fr] lg:items-end">
           <div>
             <p className="mb-6 text-[11px] uppercase tracking-[0.42em] text-[#d2bea0] opacity-80">LEOCHI STUDIO</p>
-            <h1 className="max-w-4xl font-serif text-5xl leading-none sm:text-6xl lg:text-[7rem]">Premium Custom Manufacturing &amp; Apparel Production</h1>
-            <p className="mt-8 max-w-3xl text-lg leading-8 text-[#efe3d3]">
+            <h1 className="max-w-3xl font-serif text-[clamp(4rem,7vw,7rem)] leading-[0.92] tracking-[-0.04em] text-[#fff7ed]">
+              Premium Custom Manufacturing &amp;
+              <br />
+              Apparel Production
+            </h1>
+            <p className="mt-8 max-w-2xl text-lg leading-8 text-[#efe3d3]">
               Luxury apparel production for brands and teams that want a cleaner process, better materials, and a refined final result.
             </p>
-            <p className="mt-5 max-w-2xl text-base leading-8 text-[#c3b5a2]">
+            <p className="mt-5 max-w-xl text-base leading-8 text-[#c3b5a2]">
               Premium sourcing, professional print methods, and a streamlined quote flow built for modern apparel programs.
             </p>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-12 flex flex-col gap-4 sm:flex-row">
               <Link
                 href="#quote-form"
                 className="inline-flex items-center justify-center rounded-full bg-[#f3e5cf] px-8 py-4 text-xs font-semibold uppercase tracking-[0.28em] text-black transition duration-300 hover:bg-[#fff4e4]"
@@ -148,23 +152,6 @@ export default function CustomPrintingPage() {
           </div>
 
           <CustomPrintingForm />
-        </div>
-      </section>
-
-      <section className="relative px-6 pb-28 pt-6 md:px-10">
-        <div className="mx-auto max-w-7xl rounded-[2.4rem] border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.04)] p-8 shadow-[0_35px_140px_rgba(0,0,0,0.48)] backdrop-blur-xl md:p-12">
-          <p className="text-[11px] uppercase tracking-[0.32em] text-[#cdb99a]">Final CTA</p>
-          <h2 className="mt-5 max-w-4xl font-serif text-4xl md:text-6xl text-[#fff7ed]">Build your next apparel program with a cleaner, more premium process.</h2>
-          <p className="mt-6 max-w-2xl text-base leading-8 text-[#d7c9b5]">Bring the concept. We&apos;ll handle the manufacturing direction, production setup, and quote preparation.</p>
-
-          <div className="mt-10">
-            <Link
-              href="#quote-form"
-              className="inline-flex items-center justify-center rounded-full bg-[#f3e5cf] px-8 py-4 text-xs font-semibold uppercase tracking-[0.28em] text-black transition duration-300 hover:bg-[#fff4e4]"
-            >
-              Start Your Project
-            </Link>
-          </div>
         </div>
       </section>
     </main>
