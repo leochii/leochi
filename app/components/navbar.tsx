@@ -89,7 +89,7 @@ export default function Navbar() {
       </div>
 
       <div
-        className={`fixed inset-0 z-[120] bg-black transition-opacity duration-300 md:hidden ${isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+        className={`fixed inset-0 z-[120] bg-[#000000] transition-opacity duration-500 md:hidden ${isMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
       >
         <div className="flex h-20 items-center justify-between border-b border-white/10 px-5">
           <Link href="/" className="text-2xl font-serif text-white" onClick={() => setIsMenuOpen(false)}>
@@ -100,18 +100,18 @@ export default function Navbar() {
             onClick={() => setIsMenuOpen(false)}
             className="text-xs uppercase tracking-[0.28em] text-white transition hover:text-neutral-300"
           >
-            MENU
+            CLOSE
           </button>
         </div>
 
         <nav className="flex h-[calc(100dvh-5rem)] items-center justify-center px-8">
-          <div className="flex w-full max-w-md flex-col items-center gap-7">
+          <div className="flex w-full max-w-md flex-col items-center justify-center gap-10">
             {mobileMenuItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="text-center font-serif text-4xl tracking-[0.06em] text-[#f7f0e6] transition duration-300 hover:text-white"
+                className="text-center font-serif text-[clamp(2rem,7.5vw,3.25rem)] leading-[1.05] tracking-[0.08em] text-[#f7f0e6] transition duration-300 hover:text-white"
               >
                 {item.label}
               </Link>
