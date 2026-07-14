@@ -20,18 +20,21 @@ function FacebookIcon() {
 export default function SiteFooter() {
   return (
     <footer className="border-t border-white/8 bg-black text-white">
-      <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20">
-        <div className="flex flex-col gap-12 lg:flex-row lg:items-end lg:justify-between">
+      <div className="mx-auto max-w-7xl px-6 py-10 md:px-10 md:py-12">
+        <div className="grid items-center gap-8 md:grid-cols-[1fr_auto_1fr] md:gap-6">
           <div className="max-w-md">
             <h2 className="text-2xl font-serif tracking-[0.08em] text-[#fff7ed] md:text-3xl">LEOCHI</h2>
             <p className="mt-4 text-[11px] uppercase tracking-[0.34em] text-[#d2bea0]">DESIGN IN CANADA</p>
             <a href="mailto:support@leochi.co" className="mt-5 block text-sm text-[#efe3d3] transition hover:text-[#fff7ed]">
               support@leochi.co
             </a>
-            <p className="mt-2 text-[11px] text-white/45">© 2026 LEOCHI. All Rights Reserved.</p>
           </div>
 
-          <div className="flex items-center gap-4 lg:pb-2">
+          <p className="text-center text-[11px] text-white/45 md:px-4">
+            © 2026 LEOCHI. All Rights Reserved.
+          </p>
+
+          <div className="flex items-center justify-start gap-4 md:justify-end">
             <a
               href="mailto:support@leochi.co"
               aria-label="Email LEOCHI"
