@@ -120,22 +120,9 @@ export function getResendClient(apiKey: string): EmailClient {
   };
 }
 
-function buildTrackingUrl(params: {
-  orderNumber?: string;
-  currentStatus?: string;
-  estimatedDeliveryDate?: string;
-  shippingCarrier?: string;
-  trackingNumber?: string;
-}) {
-  const search = new URLSearchParams({
-    orderNumber: params.orderNumber?.trim() || "Not available",
-    currentStatus: params.currentStatus?.trim() || "Order Confirmed",
-    estimatedDeliveryDate: params.estimatedDeliveryDate?.trim() || "Within 5-8 business days",
-    shippingCarrier: params.shippingCarrier?.trim() || "Pending shipment",
-    trackingNumber: params.trackingNumber?.trim() || "Pending shipment",
-  });
-
-  return `${LEOCHI_SITE_URL}/track-order?${search.toString()}`;
+function buildTrackingUrl(orderNumber?: string) {
+  const value = orderNumber?.trim() || "";
+  return `${LEOCHI_SITE_URL}/track-order?orderNumber=${encodeURIComponent(value)}`;
 }
 
 export async function sendOrderConfirmationEmail(client: EmailClient, payload: OrderEmailPayload) {
@@ -150,13 +137,7 @@ export async function sendOrderConfirmationEmail(client: EmailClient, payload: O
       shippingAddress: payload.shippingAddress,
       items: toSummaryItems(payload.products),
       total: formatCurrency(payload.orderTotalCad),
-      trackingUrl: buildTrackingUrl({
-        orderNumber: payload.orderNumber,
-        currentStatus: payload.currentStatus,
-        estimatedDeliveryDate: payload.estimatedDeliveryDate,
-        shippingCarrier: payload.shippingCarrier,
-        trackingNumber: payload.trackingNumber,
-      }),
+      trackingUrl: buildTrackingUrl(payload.orderNumber),
     })
   );
 
@@ -180,13 +161,7 @@ export async function sendShippingConfirmationEmail(client: EmailClient, payload
       shippingAddress: payload.shippingAddress,
       items: toSummaryItems(payload.products),
       total: formatCurrency(payload.orderTotalCad),
-      trackingUrl: buildTrackingUrl({
-        orderNumber: payload.orderNumber,
-        currentStatus: payload.currentStatus || "Shipped",
-        estimatedDeliveryDate: payload.estimatedDeliveryDate,
-        shippingCarrier: payload.carrier,
-        trackingNumber: payload.trackingNumber,
-      }),
+      trackingUrl: buildTrackingUrl(payload.orderNumber),
     })
   );
 

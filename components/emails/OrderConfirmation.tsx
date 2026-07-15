@@ -37,7 +37,7 @@ export function OrderConfirmation({
   shippingAddress = "180 Bloor Street West\nToronto, ON M5S 2V6\nCanada",
   items = defaultItems,
   total = "CAD 60.00",
-  trackingUrl = "https://leochi.co/track-order?orderNumber=LEO-48291&currentStatus=In%20Production&shippingCarrier=Canada%20Post&trackingNumber=CP123456789CA&estimatedDeliveryDate=July%2025%2C%202026",
+  trackingUrl = "https://leochi.co/track-order?orderNumber=LEO-48291",
 }: OrderConfirmationProps) {
   return (
     <EmailLayout

@@ -97,7 +97,7 @@ export async function POST(req: Request) {
     const { data: updatedOrder, error } = await supabase
       .from("orders")
       .update(updatePayload)
-      .select("id, customer_email, customer_name, amount, currency, products, shipping_address, city, province, postal_code, tracking_number, carrier")
+      .select("id, stripe_session_id, customer_email, customer_name, amount, currency, products, shipping_address, city, province, postal_code, tracking_number, carrier")
       .eq("id", id);
 
     if (error) {
@@ -135,7 +135,7 @@ export async function POST(req: Request) {
       const shippingEmailError = await sendShippingConfirmationEmail(emailClient, {
         customerEmail: orderRow.customer_email,
         customerName: orderRow.customer_name || "Client",
-        orderNumber: orderRow.id,
+        orderNumber: orderRow.stripe_session_id || orderRow.id,
         trackingNumber: tracking_number,
         carrier: carrier || "Pending shipment",
         currentStatus: formatStatusLabel(payloadStatus),
