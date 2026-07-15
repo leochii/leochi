@@ -29,8 +29,8 @@ export default async function TrackOrderPage({ searchParams }: TrackOrderPagePro
     params.estimatedDeliveryDate,
     "Within 5-8 business days"
   );
-  const shippingCarrier = readParam(params.shippingCarrier, "To be assigned");
-  const trackingNumber = readParam(params.trackingNumber, "Not available yet");
+  const shippingCarrier = readParam(params.shippingCarrier, "Pending shipment");
+  const trackingNumber = readParam(params.trackingNumber, "Pending shipment");
 
   return (
     <main className="min-h-screen bg-[#f5f0e5] text-[#1b1b1b] px-6 py-12 md:py-16">

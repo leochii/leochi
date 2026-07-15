@@ -131,8 +131,8 @@ function buildTrackingUrl(params: {
     orderNumber: params.orderNumber?.trim() || "Not available",
     currentStatus: params.currentStatus?.trim() || "Order Confirmed",
     estimatedDeliveryDate: params.estimatedDeliveryDate?.trim() || "Within 5-8 business days",
-    shippingCarrier: params.shippingCarrier?.trim() || "To be assigned",
-    trackingNumber: params.trackingNumber?.trim() || "Not available yet",
+    shippingCarrier: params.shippingCarrier?.trim() || "Pending shipment",
+    trackingNumber: params.trackingNumber?.trim() || "Pending shipment",
   });
 
   return `${LEOCHI_SITE_URL}/track-order?${search.toString()}`;

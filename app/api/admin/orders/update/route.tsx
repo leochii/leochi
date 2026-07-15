@@ -25,6 +25,14 @@ const VALID_CARRIERS = [
   "Purolator",
 ];
 
+function formatStatusLabel(value: string) {
+  return value
+    .split(/[_\s-]+/)
+    .filter((part) => part.length > 0)
+    .map((part) => part[0].toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
+}
+
 export async function POST(req: Request) {
   const requestTimestamp = new Date().toISOString();
 
@@ -35,7 +43,15 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { id, status, tracking_number, carrier, sendShippingEmail } = body;
+    const {
+      id,
+      status,
+      tracking_number,
+      carrier,
+      sendShippingEmail,
+      estimatedDeliveryDate,
+      estimated_delivery_date,
+    } = body;
     const payloadStatus = status;
 
     if (!id || typeof id !== "string") {
@@ -121,9 +137,14 @@ export async function POST(req: Request) {
         customerName: orderRow.customer_name || "Client",
         orderNumber: orderRow.id,
         trackingNumber: tracking_number,
-        carrier: carrier || "Carrier update pending",
-        currentStatus: "Shipped",
-        estimatedDeliveryDate: "To be confirmed by carrier",
+        carrier: carrier || "Pending shipment",
+        currentStatus: formatStatusLabel(payloadStatus),
+        estimatedDeliveryDate:
+          (typeof estimatedDeliveryDate === "string" && estimatedDeliveryDate.trim().length > 0
+            ? estimatedDeliveryDate.trim()
+            : typeof estimated_delivery_date === "string" && estimated_delivery_date.trim().length > 0
+              ? estimated_delivery_date.trim()
+              : "Pending shipment"),
         shippingAddress: shippingAddress || "Address on file",
         products,
         orderTotalCad: amountInCents / 100,

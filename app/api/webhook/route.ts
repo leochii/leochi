@@ -105,6 +105,7 @@ export async function POST(req: NextRequest) {
       const shippingMethod = session.metadata?.shippingMethod?.trim() || "Standard Shipping";
       const estimatedDeliveryDate =
         session.metadata?.estimatedDeliveryDate?.trim() || "Within 5-8 business days";
+      const currentStatus = session.metadata?.currentStatus?.trim() || "In Production";
 
       if (customerEmail) {
         const customerEmailError = await sendOrderConfirmationEmail(emailClient, {
@@ -112,12 +113,12 @@ export async function POST(req: NextRequest) {
           customerName,
           orderNumber: session.id,
           orderDate,
-          currentStatus: "Order Confirmed",
+          currentStatus,
           paymentStatus: session.payment_status || "paid",
           shippingMethod,
           estimatedDeliveryDate,
-          shippingCarrier: "To be assigned",
-          trackingNumber: "Not available yet",
+          shippingCarrier: "Pending shipment",
+          trackingNumber: "Pending shipment",
           shippingAddress: shippingAddress || "Address will be provided in your shipment update.",
           products,
           orderTotalCad,
