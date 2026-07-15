@@ -51,6 +51,10 @@ export async function POST(req: Request) {
       },
     });
 
+    if (!session.url) {
+      return NextResponse.json({ error: "Stripe session URL is unavailable." }, { status: 500 });
+    }
+
     return NextResponse.json({
       url: session.url,
     });
