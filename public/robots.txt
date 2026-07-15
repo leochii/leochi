@@ -1,0 +1,9 @@
+User-Agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api
+Disallow: /api/
+
+Host: https://leochi.co
+Sitemap: https://leochi.co/sitemap.xml
