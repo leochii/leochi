@@ -25,13 +25,7 @@ function requireEnv(name: string): string {
 }
 
 export function getStripeSecretKey(): string {
-  const key = requireEnv("STRIPE_SECRET_KEY");
-
-  if (process.env.NODE_ENV === "production" && key.startsWith("sk_test_")) {
-    throw new Error("STRIPE_SECRET_KEY is a test key in production. Use an sk_live key.");
-  }
-
-  return key;
+  return requireEnv("STRIPE_SECRET_KEY");
 }
 
 export function getStripeWebhookSecret(): string {
