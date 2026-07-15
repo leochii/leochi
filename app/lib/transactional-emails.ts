@@ -127,14 +127,8 @@ function buildTrackingUrl(params: {
   shippingCarrier?: string;
   trackingNumber?: string;
 }) {
-  const orderNumber = params.orderNumber?.trim();
-
-  if (!orderNumber) {
-    return `${LEOCHI_SITE_URL}/track-order`;
-  }
-
   const search = new URLSearchParams({
-    orderNumber,
+    orderNumber: params.orderNumber?.trim() || "Not available",
     currentStatus: params.currentStatus?.trim() || "Order Confirmed",
     estimatedDeliveryDate: params.estimatedDeliveryDate?.trim() || "Within 5-8 business days",
     shippingCarrier: params.shippingCarrier?.trim() || "To be assigned",
