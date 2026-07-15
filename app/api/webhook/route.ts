@@ -1,23 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import {
-  getSiteUrl,
   getStripeSecretKey,
   getStripeWebhookSecret,
   getSupabaseServerConfig,
 } from "../../lib/server-env";
+import {
+  EmailProduct,
+  formatAddress,
+  getResendClient,
+  LEOCHI_SITE_URL,
+  sendAdminNotificationEmail,
+  sendOrderConfirmationEmail,
+} from "../../lib/transactional-emails";
 
 export const runtime = "nodejs";
-
-type EmailProduct = {
-  name?: string;
-  size?: string;
-  quantity?: number;
-  price?: number;
-  image?: string;
-};
 
 function parseProducts(raw: string | undefined): EmailProduct[] {
   if (!raw) {
@@ -30,90 +28,6 @@ function parseProducts(raw: string | undefined): EmailProduct[] {
   } catch {
     return [];
   }
-}
-
-function renderProducts(products: EmailProduct[]) {
-  return products
-    .map((product) => {
-      const quantity = product.quantity ?? 1;
-      const unitPrice = product.price ?? 0;
-      const total = (unitPrice * quantity).toFixed(2);
-
-      return `
-        <tr>
-          <td style="padding: 16px 0; border-bottom: 1px solid #262626; color: #e5e5e5; font-size: 14px;">
-            <div style="font-weight: 600; color: #ffffff;">${product.name ?? "LEOCHI Item"}</div>
-            <div style="color: #9ca3af; margin-top: 6px;">Size: ${product.size ?? "N/A"} · Qty: ${quantity}</div>
-            <div style="margin-top: 8px; color: #ffffff;">CAD $${total}</div>
-          </td>
-        </tr>
-      `;
-    })
-    .join("");
-}
-
-function buildEmailHtml(params: {
-  customerName: string;
-  orderTotal: string;
-  products: EmailProduct[];
-  sessionId: string;
-  siteUrl: string;
-}) {
-  const { customerName, orderTotal, products, sessionId, siteUrl } = params;
-
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>LEOCHI Order Confirmation</title>
-      </head>
-      <body style="margin:0; padding:0; background:#050505; color:#ffffff; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#050505;">
-          <tr>
-            <td align="center" style="padding:32px 16px;">
-              <table width="100%" cellpadding="0" cellspacing="0" style="max-width:640px; background:#0b0b0b; border:1px solid #1f1f1f;">
-                <tr>
-                  <td style="padding:40px 28px 28px; text-align:center; border-bottom:1px solid #1f1f1f;">
-                    <div style="font-size:34px; letter-spacing:8px; font-weight:700; color:#ffffff;">LEOCHI</div>
-                    <div style="margin-top:8px; color:#9ca3af; letter-spacing:2px; font-size:11px; text-transform:uppercase;">Premium Streetwear</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:28px;">
-                    <h1 style="margin:0 0 12px; font-size:28px; letter-spacing:1px;">Order Confirmed</h1>
-                    <p style="margin:0 0 24px; color:#d4d4d8; line-height:1.65;">
-                      Thank you, ${customerName}. Your order is confirmed and being prepared by the LEOCHI team.
-                    </p>
-
-                    <table width="100%" cellpadding="0" cellspacing="0" style="margin:10px 0 24px;">
-                      ${renderProducts(products)}
-                    </table>
-
-                    <table width="100%" cellpadding="0" cellspacing="0" style="background:#111111; border:1px solid #262626; margin-bottom:24px;">
-                      <tr>
-                        <td style="padding:16px 18px; color:#a3a3a3; font-size:13px;">Order Reference</td>
-                        <td style="padding:16px 18px; color:#ffffff; font-size:13px; text-align:right;">${sessionId}</td>
-                      </tr>
-                      <tr>
-                        <td style="padding:16px 18px; color:#a3a3a3; font-size:13px; border-top:1px solid #262626;">Total</td>
-                        <td style="padding:16px 18px; color:#ffffff; font-size:20px; font-weight:700; text-align:right; border-top:1px solid #262626;">CAD $${orderTotal}</td>
-                      </tr>
-                    </table>
-
-                    <div style="text-align:center;">
-                      <a href="${siteUrl}/success?session_id=${sessionId}#order" style="display:inline-block; padding:12px 24px; background:#ffffff; color:#000000; text-decoration:none; letter-spacing:1px; text-transform:uppercase; font-size:12px; font-weight:700;">View Order</a>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </body>
-    </html>
-  `;
 }
 
 export async function POST(req: NextRequest) {
@@ -169,27 +83,66 @@ export async function POST(req: NextRequest) {
     const customerEmail = session.customer_details?.email;
     const resendApiKey = process.env.RESEND_API_KEY?.trim();
 
-    if (customerEmail && resendApiKey) {
-      const resend = new Resend(resendApiKey);
+    if (resendApiKey) {
+      const emailClient = getResendClient(resendApiKey);
       const customerName = session.customer_details?.name || "Valued Customer";
-      const orderTotal = ((session.amount_total || 0) / 100).toFixed(2);
-      const siteUrl = getSiteUrl();
+      const orderTotalCad = (session.amount_total || 0) / 100;
+      const orderDate = new Date(session.created * 1000).toLocaleDateString("en-CA", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      const shippingAddress = formatAddress([
+        session.customer_details?.address?.line1,
+        session.customer_details?.address?.line2,
+        [session.customer_details?.address?.city, session.customer_details?.address?.state]
+          .filter(Boolean)
+          .join(", "),
+        [session.customer_details?.address?.postal_code, session.customer_details?.address?.country]
+          .filter(Boolean)
+          .join(" "),
+      ]);
+      const shippingMethod = session.metadata?.shippingMethod?.trim() || "Standard Shipping";
+      const estimatedDeliveryDate =
+        session.metadata?.estimatedDeliveryDate?.trim() || "Within 5-8 business days";
 
-      const { error: emailError } = await resend.emails.send({
-        from: "LEOCHI <orders@leochi.co>",
-        to: customerEmail,
-        subject: "Order Confirmation - LEOCHI",
-        html: buildEmailHtml({
+      if (customerEmail) {
+        const customerEmailError = await sendOrderConfirmationEmail(emailClient, {
+          customerEmail,
           customerName,
-          orderTotal,
+          orderNumber: session.id,
+          orderDate,
+          currentStatus: "Order Confirmed",
+          paymentStatus: session.payment_status || "paid",
+          shippingMethod,
+          estimatedDeliveryDate,
+          shippingCarrier: "To be assigned",
+          trackingNumber: "Not available yet",
+          shippingAddress: shippingAddress || "Address will be provided in your shipment update.",
           products,
-          sessionId: session.id,
-          siteUrl,
-        }),
+          orderTotalCad,
+        });
+
+        if (customerEmailError) {
+          console.error("[WEBHOOK] Order confirmation email error:", customerEmailError);
+        }
+      }
+
+      const adminEmailError = await sendAdminNotificationEmail(emailClient, {
+        heading: "New order placed",
+        summary: "A new paid order has been placed on leochi.co.",
+        fields: [
+          { label: "Order Number", value: session.id },
+          { label: "Customer", value: customerName },
+          { label: "Email", value: customerEmail || "Not provided" },
+          { label: "Total", value: `CAD $${orderTotalCad.toFixed(2)}` },
+          { label: "Payment Status", value: session.payment_status || "paid" },
+        ],
+        actionUrl: `${LEOCHI_SITE_URL}/admin`,
       });
 
-      if (emailError) {
-        console.error("[WEBHOOK] Resend error:", emailError);
+      if (adminEmailError) {
+        console.error("[WEBHOOK] Admin notification email error:", adminEmailError);
       }
     }
 

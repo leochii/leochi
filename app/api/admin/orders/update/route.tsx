@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getSupabaseServerConfig } from "../../../../lib/server-env";
+import {
+  EmailProduct,
+  formatAddress,
+  getResendClient,
+  sendShippingConfirmationEmail,
+} from "../../../../lib/transactional-emails";
 
 const VALID_STATUSES = [
   "pending",
@@ -29,7 +35,7 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { id, status, tracking_number, carrier } = body;
+    const { id, status, tracking_number, carrier, sendShippingEmail } = body;
     const payloadStatus = status;
 
     if (!id || typeof id !== "string") {
@@ -72,9 +78,10 @@ export async function POST(req: Request) {
       carrier: carrier || null,
     };
 
-    const { error } = await supabase
+    const { data: updatedOrder, error } = await supabase
       .from("orders")
       .update(updatePayload)
+      .select("id, customer_email, customer_name, amount, currency, products, shipping_address, city, province, postal_code, tracking_number, carrier")
       .eq("id", id);
 
     if (error) {
@@ -83,6 +90,52 @@ export async function POST(req: Request) {
         { success: false, error: error.message || "Failed to update order" },
         { status: 500 }
       );
+    }
+
+    const orderRow = Array.isArray(updatedOrder) ? updatedOrder[0] : null;
+
+    if (sendShippingEmail === true && orderRow?.customer_email && tracking_number) {
+      const resendApiKey = process.env.RESEND_API_KEY?.trim();
+
+      if (!resendApiKey) {
+        return NextResponse.json({
+          success: true,
+          warning: "Order updated, but shipping email was skipped because RESEND_API_KEY is missing.",
+        });
+      }
+
+      const emailClient = getResendClient(resendApiKey);
+      const products = Array.isArray(orderRow.products)
+        ? (orderRow.products as EmailProduct[])
+        : [];
+
+      const shippingAddress = formatAddress([
+        orderRow.shipping_address,
+        [orderRow.city, orderRow.province].filter(Boolean).join(", "),
+        orderRow.postal_code,
+      ]);
+
+      const amountInCents = typeof orderRow.amount === "number" ? orderRow.amount : 0;
+      const shippingEmailError = await sendShippingConfirmationEmail(emailClient, {
+        customerEmail: orderRow.customer_email,
+        customerName: orderRow.customer_name || "Client",
+        orderNumber: orderRow.id,
+        trackingNumber: tracking_number,
+        carrier: carrier || "Carrier update pending",
+        currentStatus: "Shipped",
+        estimatedDeliveryDate: "To be confirmed by carrier",
+        shippingAddress: shippingAddress || "Address on file",
+        products,
+        orderTotalCad: amountInCents / 100,
+      });
+
+      if (shippingEmailError) {
+        console.error("Shipping confirmation email error:", shippingEmailError);
+        return NextResponse.json({
+          success: true,
+          warning: "Order updated, but shipping confirmation email failed to send.",
+        });
+      }
     }
 
     return NextResponse.json({ success: true });

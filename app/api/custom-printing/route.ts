@@ -1,17 +1,20 @@
 import { Buffer } from "node:buffer";
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
 import {
-  buildCustomPrintingEmailHtml,
-  CUSTOM_PRINTING_EMAIL_DESTINATION,
   CUSTOM_PRINTING_STATUS_FLOW,
   CUSTOM_PRINTING_STORAGE_BUCKET,
   formatQuoteNumber,
   sanitizeFilename,
 } from "../../lib/custom-printing";
-import { getCustomPrintingStatusEmail } from "../../lib/custom-printing-status";
 import { getSupabaseServerConfig } from "../../lib/server-env";
+import {
+  formatAddress,
+  getResendClient,
+  LEOCHI_SITE_URL,
+  sendAdminNotificationEmail,
+  sendQuoteRequestEmail,
+} from "../../lib/transactional-emails";
 
 export const runtime = "nodejs";
 
@@ -144,7 +147,7 @@ export async function POST(request: Request) {
         file_urls: uploadedFileUrls,
         status: initialStatus,
       })
-      .select("id, quote_sequence, status")
+      .select("id, quote_sequence, status, created_at")
       .single();
 
     if (insertError) {
@@ -154,57 +157,52 @@ export async function POST(request: Request) {
     }
 
     const quoteNumber = formatQuoteNumber(insertedRequest.quote_sequence);
-    const siteUrl = new URL(request.url).origin;
-    const statusUrl = `${siteUrl}/custom-printing/success?request=${encodeURIComponent(insertedRequest.id)}&quote=${encodeURIComponent(quoteNumber)}&status=${encodeURIComponent(insertedRequest.status)}`;
+    const statusUrl = `${LEOCHI_SITE_URL}/custom-printing/success?request=${encodeURIComponent(insertedRequest.id)}&quote=${encodeURIComponent(quoteNumber)}&status=${encodeURIComponent(insertedRequest.status)}`;
 
-    const resend = new Resend(resendApiKey);
-    const { error: emailError } = await resend.emails.send({
-      from: "LEOCHI <orders@leochi.co>",
-      to: CUSTOM_PRINTING_EMAIL_DESTINATION,
-      replyTo: email.trim(),
-      subject: `${quoteNumber} - Custom Printing Inquiry`,
-      html: buildCustomPrintingEmailHtml({
-        requestId: insertedRequest.id,
-        quoteNumber,
-        status: insertedRequest.status,
-        name: name.trim(),
-        email: email.trim(),
-        company: trimmedCompany ?? undefined,
-        instagramOrWebsite: trimmedInstagramOrWebsite ?? undefined,
-        quantity: parsedQuantity,
-        garmentType: garmentType.trim(),
-        desiredDeliveryDate: normalizedDesiredDeliveryDate,
-        printDetails: normalizedPrintDetails,
-        notes: trimmedNotes ?? undefined,
-        fileUrls: uploadedFileUrls,
-      }),
+    const emailClient = getResendClient(resendApiKey);
+    const submittedDate = insertedRequest.created_at
+      ? new Date(insertedRequest.created_at).toLocaleDateString("en-CA", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      : new Date().toLocaleDateString("en-CA", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+    const adminEmailError = await sendAdminNotificationEmail(emailClient, {
+      heading: "New custom printing request",
+      summary: "A new custom printing request was submitted on leochi.co.",
+      fields: [
+        { label: "Request Number", value: quoteNumber },
+        { label: "Customer", value: name.trim() },
+        { label: "Email", value: email.trim() },
+        { label: "Quantity", value: String(parsedQuantity) },
+        { label: "Garment Type", value: garmentType.trim() },
+      ],
+      actionUrl: `${LEOCHI_SITE_URL}/admin/custom-printing`,
     });
 
-    if (emailError) {
-      console.error("[CUSTOM_PRINTING] Resend error:", emailError);
+    if (adminEmailError) {
+      console.error("[CUSTOM_PRINTING] Admin email error:", adminEmailError);
     }
 
-    const customerStatusEmail = getCustomPrintingStatusEmail({
-      status: insertedRequest.status,
+    const customerEmailError = await sendQuoteRequestEmail(emailClient, {
+      customerEmail: email.trim(),
       customerName: name.trim(),
-      quoteNumber,
+      requestNumber: quoteNumber,
+      dateSubmitted: submittedDate,
       quantity: parsedQuantity,
       garmentType: garmentType.trim(),
-      fileUrls: uploadedFileUrls,
+      printingMethod: normalizedPrintDetails.join(", ") || "Not specified",
+      notes: formatAddress([trimmedNotes ?? undefined]) || "No additional notes.",
       statusUrl,
     });
 
-    const { error: customerEmailError } = await resend.emails.send({
-      from: "LEOCHI <orders@leochi.co>",
-      to: email.trim(),
-      replyTo: "support@leochi.co",
-      subject: customerStatusEmail.subject,
-      html: customerStatusEmail.html,
-      text: customerStatusEmail.text,
-    });
-
     if (customerEmailError) {
-      console.error("[CUSTOM_PRINTING] Customer status email error:", customerEmailError);
+      console.error("[CUSTOM_PRINTING] Customer quote email error:", customerEmailError);
     }
 
     return NextResponse.json({

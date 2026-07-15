@@ -7,6 +7,7 @@ interface CartItem {
   size: string;
   price: number;
   quantity: number;
+  image?: string;
 }
 
 export const runtime = "nodejs";
@@ -17,7 +18,11 @@ function getStripeClient() {
 
 export async function POST(req: Request) {
   try {
-    const { cartItems } = (await req.json()) as { cartItems?: CartItem[] };
+    const { cartItems, shippingMethod, estimatedDeliveryDate } = (await req.json()) as {
+      cartItems?: CartItem[];
+      shippingMethod?: string;
+      estimatedDeliveryDate?: string;
+    };
 
     if (!Array.isArray(cartItems) || cartItems.length === 0) {
       return NextResponse.json({ error: "Cart is empty." }, { status: 400 });
@@ -42,6 +47,13 @@ export async function POST(req: Request) {
       mode: "payment",
       metadata: {
         products: JSON.stringify(cartItems),
+        shippingMethod: typeof shippingMethod === "string" && shippingMethod.trim().length > 0
+          ? shippingMethod.trim()
+          : "Standard Shipping",
+        estimatedDeliveryDate:
+          typeof estimatedDeliveryDate === "string" && estimatedDeliveryDate.trim().length > 0
+            ? estimatedDeliveryDate.trim()
+            : "Within 5-8 business days",
       },
       success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/cancel`,
