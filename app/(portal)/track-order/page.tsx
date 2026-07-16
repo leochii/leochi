@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseServerConfig } from "../../lib/server-env";
 
 type TrackOrderPageProps = {
@@ -59,66 +59,101 @@ function getShippingStatus(orderStatus: string | null | undefined, rawShippingSt
   return "Pending shipment";
 }
 
+function renderTrackingMessage(message: string) {
+  return (
+    <main className="min-h-screen bg-[#f5f0e5] text-[#1b1b1b] px-6 py-12 md:py-16">
+      <div className="max-w-3xl mx-auto border border-[#e1d7c7] bg-[#fcf8f1] px-8 py-10 text-center">
+        <p className="font-serif text-4xl tracking-[0.18em] mb-8">LEOCHI</p>
+        <p className="text-sm text-[#5f5243] mb-6">{message}</p>
+        <a
+          href="mailto:support@leochi.co"
+          className="inline-flex items-center justify-center bg-[#1b1b1b] text-[#f5f0e5] px-6 py-3 text-xs uppercase tracking-[0.18em]"
+        >
+          Contact Support
+        </a>
+      </div>
+    </main>
+  );
+}
+
+function getSupabaseClientSafely() {
+  try {
+    const { url, serviceRoleKey } = getSupabaseServerConfig();
+    return createClient(url, serviceRoleKey);
+  } catch (error) {
+    console.error("[TRACK_ORDER] Supabase configuration unavailable:", error);
+    return null;
+  }
+}
+
+async function fetchOrderByStripeSession(
+  supabase: SupabaseClient,
+  orderNumber: string
+) {
+  try {
+    return await supabase
+      .from("orders")
+      .select("*")
+      .eq("stripe_session_id", orderNumber)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+  } catch (error) {
+    console.error("[TRACK_ORDER] Failed to fetch order by stripe session id:", error);
+    return null;
+  }
+}
+
+async function fetchOrderById(
+  supabase: SupabaseClient,
+  orderNumber: string
+) {
+  try {
+    return await supabase
+      .from("orders")
+      .select("*")
+      .eq("id", orderNumber)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+  } catch (error) {
+    console.error("[TRACK_ORDER] Failed to fetch order by id:", error);
+    return null;
+  }
+}
+
 export default async function TrackOrderPage({ searchParams }: TrackOrderPageProps) {
   const params = await searchParams;
   const orderNumber = readOrderNumber(params.orderNumber);
 
   if (!orderNumber) {
-    return (
-      <main className="min-h-screen bg-[#f5f0e5] text-[#1b1b1b] px-6 py-12 md:py-16">
-        <div className="max-w-3xl mx-auto border border-[#e1d7c7] bg-[#fcf8f1] px-8 py-10 text-center">
-          <p className="font-serif text-4xl tracking-[0.18em] mb-8">LEOCHI</p>
-          <p className="text-sm text-[#5f5243] mb-6">Order number is missing from the tracking link.</p>
-          <a
-            href="mailto:support@leochi.co"
-            className="inline-flex items-center justify-center bg-[#1b1b1b] text-[#f5f0e5] px-6 py-3 text-xs uppercase tracking-[0.18em]"
-          >
-            Contact Support
-          </a>
-        </div>
-      </main>
-    );
+    return renderTrackingMessage("Order number is missing from the tracking link.");
   }
 
-  const { url, serviceRoleKey } = getSupabaseServerConfig();
-  const supabase = createClient(url, serviceRoleKey);
+  const supabase = getSupabaseClientSafely();
+  if (!supabase) {
+    return renderTrackingMessage("Order tracking is temporarily unavailable. Please try again later or contact support.");
+  }
 
-  const bySession = await supabase
-    .from("orders")
-    .select("*")
-    .eq("stripe_session_id", orderNumber)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  const bySession = await fetchOrderByStripeSession(supabase, orderNumber);
+
+  if (!bySession) {
+    return renderTrackingMessage("Order tracking is temporarily unavailable. Please try again later or contact support.");
+  }
 
   const byId = bySession.data
     ? { data: bySession.data, error: bySession.error }
-    : await supabase
-        .from("orders")
-        .select("*")
-        .eq("id", orderNumber)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
+    : await fetchOrderById(supabase, orderNumber);
+
+  if (!byId) {
+    return renderTrackingMessage("Order tracking is temporarily unavailable. Please try again later or contact support.");
+  }
 
   const order = byId.data;
   const error = bySession.error || byId.error;
 
   if (error || !order) {
-    return (
-      <main className="min-h-screen bg-[#f5f0e5] text-[#1b1b1b] px-6 py-12 md:py-16">
-        <div className="max-w-3xl mx-auto border border-[#e1d7c7] bg-[#fcf8f1] px-8 py-10 text-center">
-          <p className="font-serif text-4xl tracking-[0.18em] mb-8">LEOCHI</p>
-          <p className="text-sm text-[#5f5243] mb-6">We could not find an order for this tracking number.</p>
-          <a
-            href="mailto:support@leochi.co"
-            className="inline-flex items-center justify-center bg-[#1b1b1b] text-[#f5f0e5] px-6 py-3 text-xs uppercase tracking-[0.18em]"
-          >
-            Contact Support
-          </a>
-        </div>
-      </main>
-    );
+    return renderTrackingMessage("We could not find an order for this tracking number.");
   }
 
   const orderData = order as Record<string, unknown>;

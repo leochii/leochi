@@ -24,8 +24,21 @@ export default function Navbar() {
   const pathname = usePathname();
   const { cart } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const hideNavbar = pathname.startsWith("/admin");
 
-  if (pathname.startsWith("/admin")) {
+  useEffect(() => {
+    if (hideNavbar || !isMenuOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [hideNavbar, isMenuOpen]);
+
+  if (hideNavbar) {
     return null;
   }
 
@@ -37,18 +50,6 @@ export default function Navbar() {
     { href: "/about", label: "ABOUT" },
     { href: "/cart", label: "CART" },
   ];
-
-  useEffect(() => {
-    if (!isMenuOpen) {
-      document.body.style.overflow = "";
-      return;
-    }
-
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isMenuOpen]);
 
   return (
     <>

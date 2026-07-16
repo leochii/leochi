@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import Image from "next/image";
 import OrderManager from "../../OrderManager";
 import { getSupabaseServerConfig } from "../../../lib/server-env";
+import { requireAdminPageAuth } from "../../../lib/admin-session";
 
 const getSupabaseClient = () => {
   const { url, serviceRoleKey } = getSupabaseServerConfig();
@@ -14,6 +15,8 @@ export default async function OrderPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireAdminPageAuth();
+
   const { id } = await params;
 
   let supabase;

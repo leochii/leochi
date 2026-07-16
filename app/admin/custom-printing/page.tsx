@@ -1,10 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { getSupabaseServerConfig } from "../../lib/server-env";
 import StatusDropdown from "./StatusDropdown";
 import { type CustomPrintingStatus } from "../../lib/custom-printing";
+import { requireAdminPageAuth } from "../../lib/admin-session";
 
 type CustomPrintingRequest = {
   id: string;
@@ -41,11 +40,7 @@ function getSupabaseClient() {
 }
 
 export default async function AdminCustomPrintingPage() {
-  const cookieStore = await cookies();
-
-  if (cookieStore.get("admin-auth")?.value !== "true") {
-    redirect("/admin/login");
-  }
+  await requireAdminPageAuth();
 
   let supabase;
   try {

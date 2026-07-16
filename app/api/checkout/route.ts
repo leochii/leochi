@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getSiteUrl, getStripeSecretKey } from "../../lib/server-env";
 
+const CUSTOMER_CHECKOUT_ERROR = "We couldn't process your payment. Please try again or contact support.";
+
 interface CartItem {
   name: string;
   size: string;
@@ -71,7 +73,7 @@ export async function POST(req: Request) {
       url: session.url,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to create checkout session.";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[CHECKOUT_API] Failed to create checkout session:", error);
+    return NextResponse.json({ error: CUSTOMER_CHECKOUT_ERROR }, { status: 500 });
   }
 }

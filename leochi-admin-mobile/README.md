@@ -87,3 +87,8 @@ leochi-admin-mobile/
 ## Notes
 
 - Keep this app private and distributed internally only.
+
+## Owner iPhone Install
+
+- Full private iPhone install flow: `README_OWNER_INSTALL.md`
+- Recommended QR command on same Wi-Fi: `npm run start:dev-client:lan`

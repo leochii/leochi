@@ -1,9 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import OrdersTable from "./OrdersTable";
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { getSupabaseServerConfig } from "../lib/server-env";
+import { requireAdminPageAuth } from "../lib/admin-session";
 
 const getSupabaseClient = () => {
   const { url, serviceRoleKey } = getSupabaseServerConfig();
@@ -12,12 +11,7 @@ const getSupabaseClient = () => {
 };
 
 export default async function AdminPage() {
-    const cookieStore = await cookies();
-
-const isAdmin = cookieStore.get("admin-auth")?.value === "true";
-if (!isAdmin) {
-  redirect("/admin/login");
-}
+  await requireAdminPageAuth();
 
   let supabase;
   try {

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useCart } from "../../context/cartcontext"
 
+const CUSTOMER_CHECKOUT_ERROR = "We couldn't process your payment. Please try again or contact support.";
+
 interface CheckoutResponse {
   url?: string;
   error?: string;
@@ -25,7 +27,7 @@ export default function CheckoutPage() {
     }
 
     if (cartItems.length === 0) {
-      setCheckoutError("Your cart is empty.");
+      setCheckoutError(CUSTOMER_CHECKOUT_ERROR);
       return;
     }
 
@@ -46,7 +48,7 @@ export default function CheckoutPage() {
       const data = (await res.json()) as CheckoutResponse;
 
       if (!res.ok) {
-        throw new Error(data.error || "Unable to start Stripe checkout.");
+        throw new Error(data.error || CUSTOMER_CHECKOUT_ERROR);
       }
 
       if (!data.url) {
@@ -55,8 +57,8 @@ export default function CheckoutPage() {
 
       window.location.assign(data.url);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Unable to start Stripe checkout.";
-      setCheckoutError(message);
+      console.error("[CHECKOUT_PAGE] Checkout failed:", error);
+      setCheckoutError(CUSTOMER_CHECKOUT_ERROR);
       setIsSubmitting(false);
     }
   };

@@ -12,6 +12,11 @@
     "plugins": [
       "expo-notifications"
     ],
+    "extra": {
+      "eas": {
+        "projectId": "51ec8316-eedd-4d3a-a090-698984234c48"
+      }
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -19,6 +24,7 @@
       "supportsTablet": false,
       "bundleIdentifier": "co.leochi.admin",
       "infoPlist": {
+        "NSUserNotificationsUsageDescription": "Leochi Admin sends owner-only order alerts.",
         "UIBackgroundModes": [
           "remote-notification"
         ]
@@ -26,6 +32,7 @@
     },
     "android": {
       "package": "co.leochi.admin"
-    }
+    },
+    "owner": "leochii"
   }
 }

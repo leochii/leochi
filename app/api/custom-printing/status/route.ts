@@ -1,10 +1,10 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { getSiteUrl, getSupabaseServerConfig } from "../../../lib/server-env";
 import { getCustomPrintingStatusEmail, isCustomPrintingStatus } from "../../../lib/custom-printing-status";
 import { formatQuoteNumber } from "../../../lib/custom-printing";
+import { isAdminRequestAuthenticated } from "../../../lib/admin-session";
 
 export const runtime = "nodejs";
 
@@ -19,8 +19,7 @@ function jsonError(message: string, status = 400) {
 
 export async function POST(request: Request) {
   try {
-    const cookieStore = await cookies();
-    if (cookieStore.get("admin-auth")?.value !== "true") {
+    if (!isAdminRequestAuthenticated(request)) {
       return jsonError("Unauthorized.", 401);
     }
 
