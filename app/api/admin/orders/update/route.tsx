@@ -7,6 +7,7 @@ import {
   getResendClient,
   sendShippingConfirmationEmail,
 } from "../../../../lib/transactional-emails";
+import { isAdminRequestAuthenticated } from "../../../../lib/admin-session";
 
 const VALID_STATUSES = [
   "pending",
@@ -34,6 +35,13 @@ function formatStatusLabel(value: string) {
 }
 
 export async function POST(req: Request) {
+  if (!isAdminRequestAuthenticated(req)) {
+    return NextResponse.json(
+      { success: false, error: "Unauthorized." },
+      { status: 401 }
+    );
+  }
+
   const requestTimestamp = new Date().toISOString();
 
   try {

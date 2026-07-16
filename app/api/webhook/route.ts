@@ -14,6 +14,7 @@ import {
   sendAdminNotificationEmail,
   sendOrderConfirmationEmail,
 } from "../../lib/transactional-emails";
+import { sendNewOrderPushNotification } from "../../lib/push-notifications";
 
 export const runtime = "nodejs";
 
@@ -60,24 +61,70 @@ export async function POST(req: NextRequest) {
     const { url, serviceRoleKey } = getSupabaseServerConfig();
     const supabase = createClient(url, serviceRoleKey);
 
-    const { error: insertError } = await supabase.from("orders").insert({
-      stripe_session_id: session.id,
-      customer_email: session.customer_details?.email,
-      customer_name: session.customer_details?.name,
-      amount: session.amount_total,
-      currency: session.currency,
-      status: session.payment_status,
-      products,
-      shipping_address: session.customer_details?.address?.line1,
-      city: session.customer_details?.address?.city,
-      province: session.customer_details?.address?.state,
-      postal_code: session.customer_details?.address?.postal_code,
-      phone: session.customer_details?.phone,
-    });
+    const { data: insertedOrder, error: insertError } = await supabase
+      .from("orders")
+      .insert({
+        stripe_session_id: session.id,
+        customer_email: session.customer_details?.email,
+        customer_name: session.customer_details?.name,
+        amount: session.amount_total,
+        currency: session.currency,
+        status: session.payment_status,
+        products,
+        shipping_address: session.customer_details?.address?.line1,
+        city: session.customer_details?.address?.city,
+        province: session.customer_details?.address?.state,
+        postal_code: session.customer_details?.address?.postal_code,
+        phone: session.customer_details?.phone,
+      })
+      .select("id")
+      .single();
 
     if (insertError) {
       console.error("[WEBHOOK] Supabase insert error:", insertError);
       return NextResponse.json({ error: "Failed to persist order" }, { status: 500 });
+    }
+
+    const customerName = session.customer_details?.name || "Valued Customer";
+    const orderTotalCad = (session.amount_total || 0) / 100;
+    const orderId = typeof insertedOrder?.id === "string" ? insertedOrder.id : session.id;
+
+    try {
+      const { data: tokenRows, error: tokenError } = await supabase
+        .from("admin_push_tokens")
+        .select("token")
+        .eq("is_active", true);
+
+      if (tokenError) {
+        console.error("[WEBHOOK] Failed to load admin push tokens:", tokenError);
+      } else if (Array.isArray(tokenRows) && tokenRows.length > 0) {
+        const tokens = tokenRows
+          .map((row) => row.token)
+          .filter((token): token is string => typeof token === "string" && token.length > 0);
+
+        if (tokens.length > 0) {
+          const { invalidTokens } = await sendNewOrderPushNotification({
+            tokens,
+            orderNumber: session.id,
+            customerName,
+            totalCad: orderTotalCad,
+            orderId,
+          });
+
+          if (invalidTokens.length > 0) {
+            const { error: disableTokenError } = await supabase
+              .from("admin_push_tokens")
+              .update({ is_active: false })
+              .in("token", invalidTokens);
+
+            if (disableTokenError) {
+              console.error("[WEBHOOK] Failed to disable invalid push tokens:", disableTokenError);
+            }
+          }
+        }
+      }
+    } catch (pushError) {
+      console.error("[WEBHOOK] Push notification error:", pushError);
     }
 
     const customerEmail = session.customer_details?.email;
@@ -85,8 +132,6 @@ export async function POST(req: NextRequest) {
 
     if (resendApiKey) {
       const emailClient = getResendClient(resendApiKey);
-      const customerName = session.customer_details?.name || "Valued Customer";
-      const orderTotalCad = (session.amount_total || 0) / 100;
       const orderDate = new Date(session.created * 1000).toLocaleDateString("en-CA", {
         year: "numeric",
         month: "long",
