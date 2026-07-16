@@ -54,6 +54,14 @@ npm run build
 2. Verify your Resend domain can send from `orders@leochi.co`.
 3. Confirm the uploaded design bucket stays public if you want admins to open the stored file URLs directly.
 
+## Admin App Production Setup
+
+- Mobile admin production guide: `README_ADMIN_APP.md`
+- Supabase migration guide: `supabase/MIGRATIONS_ADMIN_APP.md`
+- Migration SQL files:
+	- `supabase/migrations/20260716_admin_push_tokens.sql`
+	- `supabase/migrations/20260716_notification_logs.sql`
+
 ## Deploy (Vercel)
 
 1. Add all required environment variables in Vercel Project Settings.

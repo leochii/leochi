@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:migrations:check": "ls supabase/migrations/*.sql",
+    "db:migrations:print": "cat supabase/migrations/*.sql"
   },
   "dependencies": {
     "@react-email/components": "^1.0.12",

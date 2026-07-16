@@ -14,7 +14,10 @@ import {
   sendAdminNotificationEmail,
   sendOrderConfirmationEmail,
 } from "../../lib/transactional-emails";
-import { sendNewOrderPushNotification } from "../../lib/push-notifications";
+import {
+  buildNewOrderPushMessage,
+  sendNewOrderPushNotification,
+} from "../../lib/push-notifications";
 
 export const runtime = "nodejs";
 
@@ -103,6 +106,12 @@ export async function POST(req: NextRequest) {
           .filter((token): token is string => typeof token === "string" && token.length > 0);
 
         if (tokens.length > 0) {
+          const pushMessage = buildNewOrderPushMessage({
+            orderNumber: session.id,
+            customerName,
+            totalCad: orderTotalCad,
+          });
+
           const { invalidTokens } = await sendNewOrderPushNotification({
             tokens,
             orderNumber: session.id,
@@ -110,6 +119,18 @@ export async function POST(req: NextRequest) {
             totalCad: orderTotalCad,
             orderId,
           });
+
+          const { error: notificationLogError } = await supabase
+            .from("notification_logs")
+            .insert({
+              title: pushMessage.title,
+              body: pushMessage.body,
+              order_id: orderId,
+            });
+
+          if (notificationLogError) {
+            console.error("[WEBHOOK] Failed to write notification log:", notificationLogError);
+          }
 
           if (invalidTokens.length > 0) {
             const { error: disableTokenError } = await supabase

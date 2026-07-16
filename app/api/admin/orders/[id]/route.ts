@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { getSupabaseServerConfig } from "../../../../../lib/server-env";
-import { isAdminRequestAuthenticated } from "../../../../../lib/admin-session";
+import { getSupabaseServerConfig } from "../../../../lib/server-env";
+import { isAdminRequestAuthenticated } from "../../../../lib/admin-session";
 
 type Product = {
   name?: string;

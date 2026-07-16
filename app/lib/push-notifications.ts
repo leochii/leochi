@@ -39,6 +39,17 @@ export function isValidExpoPushToken(token: string): boolean {
   return PUSH_TOKEN_REGEX.test(token);
 }
 
+export function buildNewOrderPushMessage(input: {
+  orderNumber: string;
+  customerName: string;
+  totalCad: number;
+}) {
+  return {
+    title: "🔥 New Order",
+    body: `Order #${input.orderNumber}\nCustomer: ${input.customerName}\nTotal: $${input.totalCad.toFixed(2)} CAD`,
+  };
+}
+
 export async function sendNewOrderPushNotification(input: {
   tokens: string[];
   orderNumber: string;
@@ -51,8 +62,7 @@ export async function sendNewOrderPushNotification(input: {
     return { invalidTokens: [] };
   }
 
-  const title = "🔥 New Order";
-  const body = `Order #${input.orderNumber}\nCustomer: ${input.customerName}\nTotal: $${input.totalCad.toFixed(2)} CAD`;
+  const { title, body } = buildNewOrderPushMessage(input);
   const messages: ExpoPushMessage[] = validTokens.map((token) => ({
     to: token,
     sound: "default",
