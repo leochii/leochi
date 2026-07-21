@@ -8,7 +8,7 @@ export default function Shop() {
       description: "Summer 2026",
       available: true,
       href: "/shop/collections/summer",
-      itemCount: "3 Items",
+      itemCount: "3 ITEMS",
     },
     {
       title: "Fall Collection",

@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 const items = [
-  { name: "Chem-Trail", href: "/shop/products/Chem-Trail", price: "CAD $60" },
-  { name: "Farsh", href: "/shop/products/Farsh", price: "CAD $60" },
-  { name: "Leochi", href: "/shop/products/Leochi", price: "CAD $60" },
+  { name: "Shahnameh Tee", href: "/shop/products/shahnameh-tee", price: "CAD $60" },
+  { name: "Shiraz Tee", href: "/shop/products/shiraz-tee", price: "CAD $60" },
+  { name: "Isfahan Tee", href: "/shop/products/isfahan-tee", price: "CAD $60" },
 ];
 
 export default function SummerCollectionPage() {
@@ -12,7 +12,7 @@ export default function SummerCollectionPage() {
       <section className="mx-auto max-w-5xl">
         <p className="text-[10px] uppercase tracking-[0.34em] text-white/55">SEASON 01</p>
         <h1 className="mt-4 font-serif text-4xl md:text-5xl">Summer Collection</h1>
-        <p className="mt-4 text-white/70">3 Items</p>
+        <p className="mt-4 text-white/70">3 ITEMS • Summer 2026</p>
 
         <div className="mt-12 space-y-4">
           {items.map((item) => (

@@ -1,6 +1,6 @@
-const required = ["EXPO_PUBLIC_API_BASE_URL"] as const;
+type RequiredEnvName = "EXPO_PUBLIC_API_BASE_URL";
 
-function getRequiredEnv(name: (typeof required)[number]) {
+function getRequiredEnv(name: RequiredEnvName) {
   const value = process.env[name];
   if (!value || value.trim().length === 0) {
     throw new Error(`${name} is required.`);

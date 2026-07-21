@@ -7,9 +7,13 @@ import { Product, products } from "../../../../data/products";
 import { useCart } from "../../../../context/cartcontext";
 
 function ProductDetails({ product }: { product: Product }) {
-  const [selectedImage, setSelectedImage] = useState(product.images[0]);
+  const [selectedColor, setSelectedColor] = useState<"White" | "Black">("White");
+  const selectedVariant = product.variants.find((variant) => variant.color === selectedColor) ?? product.variants[0];
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const selectedImage = selectedVariant.images[selectedImageIndex] ?? selectedVariant.images[0];
   const [selectedSize, setSelectedSize] = useState("");
   const { addToCart } = useCart();
+
 
   return (
     <main className="bg-black text-white min-h-screen">
@@ -25,11 +29,11 @@ function ProductDetails({ product }: { product: Product }) {
             />
 
             <div className="grid grid-cols-3 gap-4 mt-6">
-              {product.images.map((image, index) => (
+              {selectedVariant.images.map((image, index) => (
                 <button
                   key={image}
                   type="button"
-                  onClick={() => setSelectedImage(image)}
+                    onClick={() => setSelectedImageIndex(index)}
                   className={`overflow-hidden rounded-lg transition ${selectedImage === image ? "ring-2 ring-white" : "hover:opacity-70"}`}
                 >
                   <Image
@@ -59,6 +63,32 @@ function ProductDetails({ product }: { product: Product }) {
 
             <div className="mt-10 space-y-2 text-neutral-400">
               {product.category ? <p>{product.category}</p> : null}
+            </div>
+
+            <div className="mt-10">
+              <p className="uppercase tracking-[0.3em] text-xs text-neutral-500 mb-5">
+                Color
+              </p>
+
+              <div className="flex gap-3">
+                {["White", "Black"].map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                      onClick={() => {
+                        setSelectedColor(color as "White" | "Black");
+                        setSelectedImageIndex(0);
+                      }}
+                    className={`min-w-[92px] h-12 px-4 border text-xs uppercase tracking-[0.2em] transition duration-300 ${
+                      selectedColor === color
+                        ? "bg-white text-black border-white"
+                        : "border-neutral-600 text-white hover:border-white hover:bg-white hover:text-black"
+                    }`}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {product.description ? (
@@ -94,7 +124,7 @@ function ProductDetails({ product }: { product: Product }) {
               type="button"
               onClick={() => {
                 addToCart({
-                  name: product.name,
+                  name: `${product.name} (${selectedColor})`,
                   price: product.price,
                   image: selectedImage,
                   size: selectedSize || "S",
@@ -118,7 +148,7 @@ export default function ProductPage() {
 
   const product = products.find((item) => item.slug === slug);
 
-  if (!product) {
+  if (!product || product.variants.length === 0 || product.variants[0].images.length === 0) {
     notFound();
   }
 
