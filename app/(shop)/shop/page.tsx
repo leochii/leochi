@@ -31,18 +31,11 @@ export default function Shop() {
   ] as const;
 
   return (
-    <main className="min-h-screen bg-black px-6 pb-24 pt-28 text-white md:px-12 md:pt-32 lg:px-16">
-      <section className="mx-auto max-w-7xl">
-        <p className="text-[10px] uppercase tracking-[0.35em] text-white/55">SHOP</p>
-        <p className="mt-4 max-w-2xl text-sm text-white/70 md:text-base">
-          Timeless designs inspired by Persian craftsmanship.
-        </p>
-      </section>
-
+    <main className="min-h-screen bg-black px-6 pb-20 pt-28 text-white md:px-10 md:pt-32 lg:px-14">
       <section className="mx-auto mt-20 max-w-7xl md:mt-24">
-        <h2 className="font-serif text-3xl text-white md:text-4xl">SEASONAL COLLECTIONS</h2>
+        <h2 className="text-center font-serif text-3xl text-white md:text-4xl">SEASONAL COLLECTIONS</h2>
 
-        <div className="mt-10 grid gap-8 md:mt-12 md:grid-cols-2 md:gap-10">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
           {collections.map((collection) => (
             <CollectionCard
               key={collection.title}

@@ -18,7 +18,7 @@ export default function CollectionCard({
   itemCount,
 }: CollectionCardProps) {
   const baseClass =
-    "group relative block aspect-[4/5] overflow-hidden rounded-[2px] border border-white/10 bg-neutral-950";
+    "group relative block h-[230px] overflow-hidden rounded-[2px] border border-[#222] bg-neutral-950 transition duration-300 hover:-translate-y-1 hover:border-white/35 md:h-[245px]";
 
   const content = (
     <>
@@ -36,23 +36,23 @@ export default function CollectionCard({
 
       <div className="absolute inset-0 bg-black/45" />
 
-      <div className="relative z-10 flex h-full flex-col justify-between p-7 md:p-9">
+      <div className="relative z-10 flex h-full flex-col justify-between p-5 md:p-6">
         <div>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-white/70">{seasonLabel}</p>
-          <h3 className="mt-3 font-serif text-3xl leading-tight text-white md:text-4xl">{title}</h3>
+          <p className="text-[9px] uppercase tracking-[0.25em] text-white/65">{seasonLabel}</p>
+          <h3 className="mt-2 font-serif text-[26px] leading-tight text-white md:text-[30px]">{title}</h3>
         </div>
 
         <div className={`${available ? "text-left" : "text-center"}`}>
           {available ? (
-            <p className="text-[11px] uppercase tracking-[0.25em] text-white/80">{itemCount}</p>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-white/80">{itemCount}</p>
           ) : (
             <>
-              <p className="text-[11px] uppercase tracking-[0.28em] text-white/85">COMING SOON</p>
-              <p className="mt-3 text-sm text-white/70">Inspired by Persian Seasons.</p>
+              <p className="text-[10px] uppercase tracking-[0.28em] text-white/85">COMING SOON</p>
+              <p className="mt-2 text-xs text-white/70">Inspired by Persian Seasons.</p>
             </>
           )}
 
-          <p className={`mt-4 text-sm text-white/75 ${available ? "" : "text-white/70"}`}>{description}</p>
+          <p className={`mt-3 text-xs text-white/75 ${available ? "" : "text-white/70"}`}>{description}</p>
         </div>
       </div>
     </>
