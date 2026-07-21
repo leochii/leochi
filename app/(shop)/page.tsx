@@ -38,32 +38,19 @@ export default function Home() {
         <div className="absolute inset-0 md:hidden bg-[radial-gradient(circle_at_72%_26%,rgba(230,176,120,0.14)_0%,rgba(230,176,120,0)_36%)]" />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-black/80 md:h-32" />
 
-        <div className="relative z-10 flex h-full items-start md:items-center px-6 sm:px-8 md:px-14 lg:px-20 pt-0">
+        <div className="relative z-10 flex h-full items-start md:items-center px-6 sm:px-8 md:px-14 lg:px-20 pt-[50px]">
           <div className="max-w-xl md:max-w-2xl text-left text-white md:-translate-x-2 lg:-translate-x-3">
             <h1
-              className="hidden md:block text-[clamp(1.45rem,1.8vw,2.7rem)] leading-[1.08]"
+              className="text-[clamp(1.45rem,1.8vw,2.7rem)] leading-[1.08]"
               style={{
                 fontFamily: '"Iowan Old Style", "Bodoni 72", "Times New Roman", serif',
                 letterSpacing: "0.1em",
               }}
             >
-              PREMIUM STREETWEAR
-              <br />
-              INSPIRED BY PERSIAN CULTURE
-            </h1>
-
-            <h1
-              className="md:hidden text-[clamp(1.25rem,5.4vw,2rem)] leading-[1.04]"
-              style={{
-                fontFamily: '"Iowan Old Style", "Bodoni 72", "Times New Roman", serif',
-                letterSpacing: "0.08em",
-              }}
-            >
-              PREMIUM STREETWEAR
-              <br />
-              INSPIRED BY
-              <br />
-              PERSIAN CULTURE
+              <span className="block">PREMIUM STREETWEAR</span>
+              <span className="block md:hidden">INSPIRED BY</span>
+              <span className="block md:hidden">PERSIAN CULTURE</span>
+              <span className="hidden md:block">INSPIRED BY PERSIAN CULTURE</span>
             </h1>
 
             <p
