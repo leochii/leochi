@@ -69,7 +69,7 @@ export default function SiteFooter() {
             </a>
           </div>
 
-          <p className="text-center text-[11px] text-white/45 md:px-4">
+          <p className="text-center text-[11px] text-white/45 md:justify-self-end md:pr-12 md:text-right">
             © 2026 LEOCHI. All Rights Reserved.
           </p>
         </div>
