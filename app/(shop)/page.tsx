@@ -38,7 +38,7 @@ export default function Home() {
         <div className="absolute inset-0 md:hidden bg-[radial-gradient(circle_at_72%_26%,rgba(230,176,120,0.14)_0%,rgba(230,176,120,0)_36%)]" />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-black/80 md:h-32" />
 
-        <div className="relative z-10 flex h-full items-start md:items-center px-6 sm:px-8 md:px-14 lg:px-20 pt-[100px]">
+        <div className="absolute inset-x-0 top-1/2 z-10 flex -translate-y-1/2 items-start px-6 sm:px-8 md:px-14 lg:px-20">
           <div className="max-w-xl md:max-w-2xl text-left text-white md:-translate-x-2 lg:-translate-x-3">
             <h1
               className="text-[clamp(1.45rem,1.8vw,2.7rem)] leading-[1.08]"
