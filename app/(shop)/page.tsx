@@ -16,16 +16,16 @@ export default function Home() {
           style={{ objectPosition: "right center", objectFit: "cover" }}
         />
 
-        <div className="absolute inset-0 bg-black/45" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.8)_0%,rgba(0,0,0,0.5)_35%,rgba(0,0,0,0.2)_65%,rgba(0,0,0,0.45)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,8,10,0.58)_0%,rgba(8,8,10,0.34)_34%,rgba(8,8,10,0.12)_62%,rgba(8,8,10,0.22)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_28%,rgba(230,176,120,0.16)_0%,rgba(230,176,120,0)_44%)]" />
 
         <div className="relative z-10 flex h-full items-center px-7 sm:px-10 md:px-14 lg:px-20">
           <div className="max-w-2xl pt-14 text-left text-white md:pt-20">
             <h1
-              className="text-3xl leading-[1.08] sm:text-4xl md:text-5xl lg:text-6xl"
+              className="text-3xl leading-[1.1] sm:text-4xl md:text-5xl lg:text-6xl"
               style={{
                 fontFamily: '"Iowan Old Style", "Bodoni 72", "Times New Roman", serif',
-                letterSpacing: "0.08em",
+                letterSpacing: "0.1em",
               }}
             >
               PREMIUM STREETWEAR
@@ -34,8 +34,8 @@ export default function Home() {
             </h1>
 
             <p
-              className="mt-8 text-[10px] uppercase leading-[1.85] text-white/85 sm:text-xs md:text-sm"
-              style={{ letterSpacing: "0.26em" }}
+              className="mt-8 text-[10px] uppercase leading-[1.9] text-white/85 sm:text-xs md:text-sm"
+              style={{ letterSpacing: "0.28em" }}
             >
               TIMELESS DESIGNS.
               <br />
@@ -53,8 +53,6 @@ export default function Home() {
 
           <div className="flex-1" />
         </div>
-
-        <div className="pointer-events-none absolute inset-0 border border-white/10" />
       </section>
     </main>
   );
