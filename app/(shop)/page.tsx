@@ -13,7 +13,7 @@ export default function Home() {
           fill
           priority
           className="object-cover"
-          style={{ objectPosition: "right center", objectFit: "cover" }}
+          style={{ objectPosition: "right center", objectFit: "contain" }}
         />
 
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,8,10,0.58)_0%,rgba(8,8,10,0.34)_34%,rgba(8,8,10,0.12)_62%,rgba(8,8,10,0.22)_100%)]" />
@@ -22,7 +22,7 @@ export default function Home() {
         <div className="relative z-10 flex h-full items-center px-7 sm:px-10 md:px-14 lg:px-20">
           <div className="max-w-2xl pt-14 text-left text-white md:pt-20">
             <h1
-              className="text-3xl leading-[1.1] sm:text-4xl md:text-5xl lg:text-6xl"
+              className="text-2xl leading-[1.1] sm:text-3xl md:text-4xl lg:text-5xl"
               style={{
                 fontFamily: '"Iowan Old Style", "Bodoni 72", "Times New Roman", serif',
                 letterSpacing: "0.1em",

@@ -57,7 +57,7 @@ export default function Navbar() {
       <header
         className={`fixed top-0 left-0 right-0 pointer-events-auto ${
           isHomePage
-              ? "border-b border-white/15 bg-gradient-to-b from-black/45 to-transparent"
+              ? "bg-gradient-to-b from-black/45 to-transparent"
             : "border-b border-neutral-800 bg-black/95 backdrop-blur"
         }`}
         style={{ zIndex: 100 }}
