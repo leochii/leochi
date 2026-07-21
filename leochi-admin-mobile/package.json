@@ -7,14 +7,14 @@
     "start": "expo start",
     "start:dev-client": "expo start --dev-client --tunnel",
     "start:dev-client:lan": "expo start --dev-client --lan",
-    "build:ios:dev": "eas build --platform ios --profile owner-dev",
-    "build:ios:prod": "eas build --platform ios --profile owner-prod",
+    "build:ios:dev": "npx eas-cli build --platform ios --profile owner-dev",
+    "build:ios:prod": "npx eas-cli build --platform ios --profile owner-prod",
     "ios": "expo run:ios",
     "android": "expo run:android",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "eas:build:ios:dev": "eas build --platform ios --profile owner-dev",
-    "eas:build:ios:internal": "eas build --platform ios --profile owner-internal"
+    "eas:build:ios:dev": "npx eas-cli build --platform ios --profile owner-dev",
+    "eas:build:ios:internal": "npx eas-cli build --platform ios --profile owner-internal"
   },
   "dependencies": {
     "@react-navigation/native": "^6.1.17",

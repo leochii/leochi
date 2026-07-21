@@ -27,7 +27,8 @@
         "NSUserNotificationsUsageDescription": "Leochi Admin sends owner-only order alerts.",
         "UIBackgroundModes": [
           "remote-notification"
-        ]
+        ],
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {

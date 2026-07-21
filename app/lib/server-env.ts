@@ -7,8 +7,12 @@ const PLACEHOLDER_PATTERNS = [
   /^your[-_]/i,
 ];
 
+function isPlaceholderValue(value: string) {
+  return PLACEHOLDER_PATTERNS.some((pattern) => pattern.test(value));
+}
+
 function assertNotPlaceholder(name: string, value: string) {
-  if (PLACEHOLDER_PATTERNS.some((pattern) => pattern.test(value))) {
+  if (isPlaceholderValue(value)) {
     throw new Error(`${name} contains a placeholder value. Set a real production value.`);
   }
 }
@@ -43,6 +47,25 @@ export function getSupabaseServerConfig() {
     url: requireEnv("NEXT_PUBLIC_SUPABASE_URL"),
     serviceRoleKey: requireEnv("SUPABASE_SERVICE_ROLE_KEY"),
   };
+}
+
+export function getTelegramNotificationConfig() {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN?.trim();
+  const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
+
+  if (!botToken || !chatId) {
+    return null;
+  }
+
+  if (isPlaceholderValue(botToken)) {
+    throw new Error("TELEGRAM_BOT_TOKEN contains a placeholder value. Set a real production value.");
+  }
+
+  if (isPlaceholderValue(chatId)) {
+    throw new Error("TELEGRAM_CHAT_ID contains a placeholder value. Set a real production value.");
+  }
+
+  return { botToken, chatId };
 }
 
 export function getSiteUrl(fallbackOrigin?: string): string {

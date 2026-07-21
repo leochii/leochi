@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import {
   getStripeSecretKey,
   getStripeWebhookSecret,
+  getTelegramNotificationConfig,
   getSupabaseServerConfig,
 } from "../../lib/server-env";
 import {
@@ -14,6 +15,10 @@ import {
   sendAdminNotificationEmail,
   sendOrderConfirmationEmail,
 } from "../../lib/transactional-emails";
+import {
+  buildNewOrderTelegramMessage,
+  sendTelegramMessage,
+} from "../../lib/telegram-notifications";
 import {
   buildNewOrderPushMessage,
   sendNewOrderPushNotification,
@@ -91,6 +96,23 @@ export async function POST(req: NextRequest) {
     const customerName = session.customer_details?.name || "Valued Customer";
     const orderTotalCad = (session.amount_total || 0) / 100;
     const orderId = typeof insertedOrder?.id === "string" ? insertedOrder.id : session.id;
+    const customerEmail = session.customer_details?.email || session.customer_email || "Not provided";
+
+    try {
+      const telegramConfig = getTelegramNotificationConfig();
+
+      if (telegramConfig) {
+        const telegramMessage = buildNewOrderTelegramMessage({
+          customerEmail,
+          amountTotalCad: orderTotalCad,
+          sessionId: session.id,
+        });
+
+        await sendTelegramMessage(telegramConfig, telegramMessage);
+      }
+    } catch (telegramError) {
+      console.error("[WEBHOOK] Telegram notification error:", telegramError);
+    }
 
     try {
       const { data: tokenRows, error: tokenError } = await supabase
@@ -148,7 +170,6 @@ export async function POST(req: NextRequest) {
       console.error("[WEBHOOK] Push notification error:", pushError);
     }
 
-    const customerEmail = session.customer_details?.email;
     const resendApiKey = process.env.RESEND_API_KEY?.trim();
 
     if (resendApiKey) {

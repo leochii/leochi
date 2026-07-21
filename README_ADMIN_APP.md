@@ -14,6 +14,8 @@ Configure these in Vercel Production and local `.env.local` where needed:
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
 - `RESEND_API_KEY`
+- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_CHAT_ID`
 - `ADMIN_PASSWORD`
 - `ADMIN_EMAIL` (recommended, owner-only email restriction)
 - `ADMIN_SESSION_SECRET`

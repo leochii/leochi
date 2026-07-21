@@ -25,6 +25,7 @@ export default function Navbar() {
   const { cart } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const hideNavbar = pathname.startsWith("/admin");
+  const isHomePage = pathname === "/";
 
   useEffect(() => {
     if (hideNavbar || !isMenuOpen) {
@@ -54,11 +55,19 @@ export default function Navbar() {
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 pointer-events-auto border-b border-neutral-800 bg-black/95 backdrop-blur"
+        className={`fixed top-0 left-0 right-0 pointer-events-auto ${
+          isHomePage
+            ? "border-b border-white/10 bg-gradient-to-b from-black/55 to-transparent"
+            : "border-b border-neutral-800 bg-black/95 backdrop-blur"
+        }`}
         style={{ zIndex: 100 }}
       >
         <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-5 md:h-20 md:px-8">
-          <Link href="/" className="text-2xl font-serif text-white md:text-3xl">
+          <Link
+            href="/"
+            className="text-2xl text-white md:text-3xl"
+            style={{ fontFamily: '"Iowan Old Style", "Bodoni 72", "Times New Roman", serif' }}
+          >
             LEOCHI
           </Link>
 
@@ -72,20 +81,23 @@ export default function Navbar() {
             MENU
           </button>
 
-          <nav className="hidden items-center gap-4 text-[10px] uppercase tracking-[0.2em] text-white md:flex md:gap-8 md:text-sm md:tracking-[0.25em]">
+          <nav
+            className="hidden items-center gap-4 text-[10px] uppercase text-white md:flex md:gap-12 md:text-sm"
+            style={{ letterSpacing: "0.28em" }}
+          >
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`transition ${isActivePath(item.href) ? "text-white" : "text-neutral-400 hover:text-neutral-200"}`}
+                className={`transition ${isActivePath(item.href) ? "text-white" : "text-white/80 hover:text-white"}`}
               >
                 {item.label}
               </Link>
             ))}
 
-            <Link href="/cart" className="transition hover:text-neutral-300">
+            <Link href="/cart" className="transition text-white/80 hover:text-white">
               CART
-              <span className="ml-2 bg-white px-2 py-1 text-[10px] font-bold text-black md:text-xs">
+              <span className="ml-3 bg-white/95 px-2 py-1 text-[10px] font-bold text-black md:text-xs">
                 {cart.length}
               </span>
             </Link>

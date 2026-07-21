@@ -5,63 +5,46 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="h-screen overflow-hidden bg-black">
+    <main className="bg-black">
+      <section className="relative h-screen min-h-[560px]">
+        <Image
+          src="/hero-leochi.jpg"
+          alt="LEOCHI hero"
+          fill
+          priority
+          className="object-cover object-center"
+        />
 
-      <section className="relative h-screen">
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_24%,rgba(0,0,0,0.55)_100%)]" />
 
-        {/* Images */}
-        <div className="absolute inset-0 grid grid-cols-2">
-
-          <div className="group relative overflow-hidden">
-            <Image
-              src="/Chem-Trail.PNG"
-              alt="Chem-Trail"
-              fill
-              priority
-              className="object-cover scale-125"
-            />
-
-            <div className="absolute inset-0 pointer-events-none bg-black/35 group-hover:bg-black/15 transition duration-700" />
-          </div>
-
-          <div className="group relative overflow-hidden">
-            <Image
-              src="/Farsh.PNG"
-              alt="Farsh"
-              fill
-              priority
-              className="object-cover scale-125"
-            />
-
-            <div className="absolute inset-0 pointer-events-none bg-black/35 group-hover:bg-black/15 transition duration-700" />
-          </div>
-
-        </div>
-
-        <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
-
-        {/* Center */}
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center -translate-y-10">
-
-          <h1 className="font-serif text-7xl tracking-wide">
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center text-white pt-8">
+          <h1
+            className="text-6xl leading-none sm:text-7xl md:text-8xl lg:text-9xl"
+            style={{
+              fontFamily: '"Iowan Old Style", "Bodoni 72", "Times New Roman", serif',
+              letterSpacing: "0.16em",
+            }}
+          >
             LEOCHI
           </h1>
 
-          <p className="mt-6 text-xs tracking-[0.45em] uppercase opacity-80">
-            EST. 2019
+          <p
+            className="mt-7 max-w-2xl text-sm uppercase leading-relaxed sm:text-base md:text-lg"
+            style={{ letterSpacing: "0.2em" }}
+          >
+            Premium Streetwear Inspired by Persian Culture
           </p>
 
           <Link
             href="/shop"
-            className="mt-10 border border-white px-10 py-4 uppercase tracking-[0.25em] text-sm transition hover:bg-white hover:text-black"
+            className="mt-12 inline-flex items-center justify-center border border-white px-8 py-3 text-xs font-semibold uppercase transition hover:bg-white hover:text-black sm:px-10 sm:py-4 sm:text-sm"
+            style={{ letterSpacing: "0.22em" }}
           >
-            VIEW COLLECTION
+            Shop Collection
           </Link>
-
         </div>
-
       </section>
-
     </main>
   );
 }
