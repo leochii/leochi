@@ -9,8 +9,9 @@ import { useCart } from "../../../../context/cartcontext";
 function ProductDetails({ product }: { product: Product }) {
   const [selectedColor, setSelectedColor] = useState<"White" | "Black">("White");
   const selectedVariant = product.variants.find((variant) => variant.color === selectedColor) ?? product.variants[0];
+  const activeImages = selectedVariant.images.length > 0 ? selectedVariant.images : product.variants[0].images;
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const selectedImage = selectedVariant.images[selectedImageIndex] ?? selectedVariant.images[0];
+  const selectedImage = activeImages[selectedImageIndex] ?? activeImages[0];
   const [selectedSize, setSelectedSize] = useState("");
   const { addToCart } = useCart();
 
@@ -29,11 +30,11 @@ function ProductDetails({ product }: { product: Product }) {
             />
 
             <div className="grid grid-cols-3 gap-4 mt-6">
-              {selectedVariant.images.map((image, index) => (
+              {activeImages.map((image, index) => (
                 <button
                   key={image}
                   type="button"
-                    onClick={() => setSelectedImageIndex(index)}
+                  onClick={() => setSelectedImageIndex(index)}
                   className={`overflow-hidden rounded-lg transition ${selectedImage === image ? "ring-2 ring-white" : "hover:opacity-70"}`}
                 >
                   <Image
@@ -75,10 +76,10 @@ function ProductDetails({ product }: { product: Product }) {
                   <button
                     key={color}
                     type="button"
-                      onClick={() => {
-                        setSelectedColor(color as "White" | "Black");
-                        setSelectedImageIndex(0);
-                      }}
+                    onClick={() => {
+                      setSelectedColor(color as "White" | "Black");
+                      setSelectedImageIndex(0);
+                    }}
                     className={`min-w-[92px] h-12 px-4 border text-xs uppercase tracking-[0.2em] transition duration-300 ${
                       selectedColor === color
                         ? "bg-white text-black border-white"

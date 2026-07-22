@@ -1,9 +1,22 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const items = [
-  { name: "Shahnameh Tee", href: "/shop/products/shahnameh-tee", price: "CAD $60" },
-  { name: "Shiraz Tee", href: "/shop/products/shiraz-tee", price: "CAD $60" },
-  { name: "Isfahan Tee", href: "/shop/products/isfahan-tee", price: "CAD $60" },
+  {
+    name: "Shahnameh Tee",
+    href: "/shop/products/shahnameh",
+    image: "/Shahnameh-front-white-male.jpg",
+  },
+  {
+    name: "Shiraz Tee",
+    href: "/shop/products/shiraz",
+    image: "/Shiraz-black-male-cafe-front.jpg",
+  },
+  {
+    name: "Isfahan Tee",
+    href: "/shop/products/isfahan",
+    image: "/Isfahan-white-front-male-street.jpg",
+  },
 ];
 
 export default function SummerCollectionPage() {
@@ -14,15 +27,26 @@ export default function SummerCollectionPage() {
         <h1 className="mt-4 font-serif text-4xl md:text-5xl">Summer Collection</h1>
         <p className="mt-4 text-white/70">3 ITEMS • Summer 2026</p>
 
-        <div className="mt-12 space-y-4">
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="flex items-center justify-between border border-white/12 bg-white/[0.02] px-5 py-4 transition hover:border-white/30 hover:bg-white/[0.05]"
+              className="group overflow-hidden border border-white/12 bg-white/[0.02] transition hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/[0.04]"
             >
-              <span className="font-serif text-2xl md:text-3xl">{item.name}</span>
-              <span className="text-sm text-white/80">{item.price}</span>
+              <div className="relative aspect-[3/4] w-full overflow-hidden bg-white/[0.01]">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                />
+              </div>
+
+              <div className="px-4 py-4">
+                <p className="font-serif text-2xl leading-tight">{item.name}</p>
+              </div>
             </Link>
           ))}
         </div>

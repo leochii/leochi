@@ -12,7 +12,7 @@ export type Product = {
 
 export const products: Product[] = [
   {
-    slug: "shahnameh-tee",
+    slug: "shahnameh",
     name: "Shahnameh Tee",
     price: 60,
     variants: [
@@ -21,15 +21,11 @@ export const products: Product[] = [
         images: [
           "/Shahnameh-front-white-male.jpg",
           "/Shahnameh-back-white-male.jpg",
-          "/shahnameh-front-white-female-park.jpg",
-          "/shahnameh-back-white-female-park.jpg",
         ],
       },
       {
         color: "Black",
         images: [
-          "/Shahnameh-front-black-male.jpg",
-          "/Shahnameh-back-black-male.jpg",
           "/Shahnameh-front-black-male.jpg",
           "/Shahnameh-back-black-male.jpg",
         ],
@@ -39,17 +35,16 @@ export const products: Product[] = [
     description: "Heritage graphic tee available in black and white with curated lifestyle imagery.",
   },
   {
-    slug: "shiraz-tee",
+    slug: "shiraz",
     name: "Shiraz Tee",
     price: 60,
     variants: [
       {
         color: "White",
         images: [
+          "/Shiraz-white-female-crosswalk.jpg",
           "/Shiraz-white-editorial-duo.jpg",
-          "/Shiraz-white-femail-flower.jpg",
-          "/shiraz-white-female-crosswalk.jpg",
-          "/Shiraz-white-editorial-duo.jpg",
+          "/Shiraz-white-female-flower.jpg",
         ],
       },
       {
@@ -58,7 +53,7 @@ export const products: Product[] = [
           "/Shiraz-black-male-cafe-front.jpg",
           "/Shiraz-black-male-cafe-back.jpg",
           "/Shiraz-black-female-front.PNG",
-          "/shiraz-black-femaile-back.jpg",
+          "/Shiraz-black-female-back.jpg",
         ],
       },
     ],
@@ -66,27 +61,20 @@ export const products: Product[] = [
     description: "Persian-inspired statement tee offered in black and white with male and female lifestyle shots.",
   },
   {
-    slug: "isfahan-tee",
+    slug: "isfahan",
     name: "Isfahan Tee",
     price: 60,
     variants: [
       {
         color: "White",
         images: [
-          "/Isafahn-white-front-male-street.jpg",
-          "/isfahan-white-back-male-street.jpg",
-          "/Isafahn-white-front-male-street.jpg",
-          "/isfahan-white-back-male-street.jpg",
+          "/Isfahan-white-front-male-street.jpg",
+          "/Isfahan-white-back-male-street.jpg",
         ],
       },
       {
         color: "Black",
-        images: [
-          "/Isafahn-white-front-male-street.jpg",
-          "/isfahan-white-back-male-street.jpg",
-          "/Isafahn-white-front-male-street.jpg",
-          "/isfahan-white-back-male-street.jpg",
-        ],
+        images: [],
       },
     ],
     category: "Summer 2026",
