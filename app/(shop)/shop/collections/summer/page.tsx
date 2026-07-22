@@ -6,16 +6,19 @@ const items = [
     name: "Shahnameh Tee",
     href: "/shop/products/shahnameh",
     image: "/Shahnameh-front-white-male.jpg",
+    variants: ["White", "Black"] as const,
   },
   {
     name: "Shiraz Tee",
     href: "/shop/products/shiraz",
     image: "/Shiraz-black-male-cafe-front.jpg",
+    variants: ["White", "Black"] as const,
   },
   {
     name: "Isfahan Tee",
     href: "/shop/products/isfahan",
     image: "/Isfahan-white-front-male-street.jpg",
+    variants: ["White"] as const,
   },
 ];
 
@@ -46,6 +49,18 @@ export default function SummerCollectionPage() {
 
               <div className="px-4 py-4">
                 <p className="font-serif text-2xl leading-tight">{item.name}</p>
+                <div className="mt-3 flex items-center gap-2">
+                  {item.variants.map((variant) => (
+                    <span
+                      key={`${item.name}-${variant}`}
+                      className={`h-3.5 w-3.5 rounded-full transition-transform duration-200 hover:scale-110 ${
+                        variant === "White"
+                          ? "bg-black border border-white/25"
+                          : "bg-white border border-white/70"
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
             </Link>
           ))}
