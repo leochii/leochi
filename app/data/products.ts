@@ -52,7 +52,7 @@ export const products: Product[] = [
         images: [
           "/Shiraz-black-male-cafe-front.jpg",
           "/Shiraz-black-male-cafe-back.jpg",
-          "/Shiraz-black-female-front.PNG",
+          "/Shiraz-black-female-front.jpg",
           "/Shiraz-black-female-back.jpg",
         ],
       },

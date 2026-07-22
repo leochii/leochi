@@ -7,9 +7,11 @@ import { Product, products } from "../../../../data/products";
 import { useCart } from "../../../../context/cartcontext";
 
 function ProductDetails({ product }: { product: Product }) {
-  const [selectedColor, setSelectedColor] = useState<"White" | "Black">("White");
-  const selectedVariant = product.variants.find((variant) => variant.color === selectedColor) ?? product.variants[0];
-  const activeImages = selectedVariant.images.length > 0 ? selectedVariant.images : product.variants[0].images;
+  const availableVariants = product.variants.filter((variant) => variant.images.length > 0);
+  const defaultColor = availableVariants[0]?.color ?? "White";
+  const [selectedColor, setSelectedColor] = useState<"White" | "Black">(defaultColor);
+  const selectedVariant = availableVariants.find((variant) => variant.color === selectedColor) ?? availableVariants[0];
+  const activeImages = selectedVariant?.images ?? [];
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const selectedImage = activeImages[selectedImageIndex] ?? activeImages[0];
   const [selectedSize, setSelectedSize] = useState("");
@@ -72,21 +74,21 @@ function ProductDetails({ product }: { product: Product }) {
               </p>
 
               <div className="flex gap-3">
-                {["White", "Black"].map((color) => (
+                {availableVariants.map((variant) => (
                   <button
-                    key={color}
+                    key={variant.color}
                     type="button"
                     onClick={() => {
-                      setSelectedColor(color as "White" | "Black");
+                      setSelectedColor(variant.color);
                       setSelectedImageIndex(0);
                     }}
                     className={`min-w-[92px] h-12 px-4 border text-xs uppercase tracking-[0.2em] transition duration-300 ${
-                      selectedColor === color
+                      selectedColor === variant.color
                         ? "bg-white text-black border-white"
                         : "border-neutral-600 text-white hover:border-white hover:bg-white hover:text-black"
                     }`}
                   >
-                    {color}
+                    {variant.color}
                   </button>
                 ))}
               </div>
@@ -148,8 +150,9 @@ export default function ProductPage() {
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
 
   const product = products.find((item) => item.slug === slug);
+  const hasImages = !!product && product.variants.some((variant) => variant.images.length > 0);
 
-  if (!product || product.variants.length === 0 || product.variants[0].images.length === 0) {
+  if (!product || !hasImages) {
     notFound();
   }
 
