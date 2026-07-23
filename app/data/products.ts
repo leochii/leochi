@@ -21,6 +21,8 @@ export const products: Product[] = [
         images: [
           "/Shahnameh-front-white-male.jpg",
           "/Shahnameh-back-white-male.jpg",
+          "/shahnameh-front-white-female-park.jpg",
+          "/shahnameh-back-white-female-park.jpg",
         ],
       },
       {
@@ -28,6 +30,8 @@ export const products: Product[] = [
         images: [
           "/Shahnameh-front-black-male.jpg",
           "/Shahnameh-back-black-male.jpg",
+          "/Shahnameh-front-black-female-street.jpg",
+          "/Shahnameh-back-black-female-street.jpg",
         ],
       },
     ],
@@ -43,8 +47,8 @@ export const products: Product[] = [
         color: "White",
         images: [
           "/Shiraz-white-female-crosswalk.jpg",
-          "/Shiraz-white-editorial-duo.jpg",
           "/Shiraz-white-female-flower.jpg",
+          "/Shiraz-white-editorial-duo.jpg",
         ],
       },
       {
@@ -74,7 +78,9 @@ export const products: Product[] = [
       },
       {
         color: "Black",
-        images: [],
+        images: [
+          "/Isfahan-black-front-male-park.jpg",
+        ],
       },
     ],
     category: "Summer 2026",
