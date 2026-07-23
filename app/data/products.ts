@@ -46,7 +46,7 @@ export const products: Product[] = [
       {
         color: "White",
         images: [
-          "/Shiraz-white-female-crosswalk.jpg",
+          "/shiraz-white-female-crosswalk.jpg",
           "/Shiraz-white-female-flower.jpg",
           "/Shiraz-white-editorial-duo.jpg",
         ],
