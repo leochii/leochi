@@ -45,9 +45,25 @@ export default function SiteFooter() {
             <a href="/shop" className="transition hover:text-white">Shop</a>
             <a href="/custom-printing" className="transition hover:text-white">Studio</a>
             <a href="/about" className="transition hover:text-white">About</a>
-            <a href="mailto:support@leochi.co" className="transition hover:text-white">Contact</a>
-            <a href={instagramHref} target="_blank" rel="noreferrer" className="transition hover:text-white">Instagram</a>
-            <a href="https://www.pinterest.com/" target="_blank" rel="noreferrer" className="transition hover:text-white">Pinterest</a>
+          </div>
+
+          <div className="mt-8 flex items-center justify-center gap-4">
+            <a
+              href="mailto:support@leochi.co"
+              aria-label="Email LEOCHI"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white text-white transition-opacity duration-300 hover:opacity-70"
+            >
+              <EmailIcon />
+            </a>
+            <a
+              href={facebookHref}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LEOCHI Facebook"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white text-white transition-opacity duration-300 hover:opacity-70"
+            >
+              <FacebookIcon />
+            </a>
           </div>
 
           <p className="mt-10 text-[11px] text-white/45">© 2026 LEOCHI. All Rights Reserved.</p>
