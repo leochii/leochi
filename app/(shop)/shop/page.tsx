@@ -42,7 +42,7 @@ export default function Shop() {
   } as const;
 
   return (
-    <main className="min-h-screen bg-black px-6 pb-20 pt-28 text-white md:px-10 md:pt-32 lg:px-14">
+    <main className="min-h-screen bg-black px-6 pb-32 pt-28 text-white md:px-10 md:pt-32 lg:px-14 lg:pb-40">
       <section className="mx-auto max-w-[1800px]">
         <h2 className="text-center font-serif text-3xl text-white md:text-4xl">SEASONAL COLLECTIONS</h2>
 
@@ -52,7 +52,7 @@ export default function Shop() {
               key={collection.title}
               className="group relative h-[750px] overflow-hidden border border-white/[0.08] transition-all duration-[250ms] ease-out hover:shadow-[0_0_26px_rgba(201,158,98,0.28)] sm:h-[780px] lg:h-[820px]"
             >
-              <div className="absolute inset-x-0 top-0 h-[56%] overflow-hidden">
+              <div className="absolute inset-x-0 top-0 h-[64%] overflow-hidden">
                 <Image
                   src={seasonalBackgrounds[collection.title]}
                   alt={collection.title}
@@ -62,7 +62,7 @@ export default function Shop() {
                 />
               </div>
 
-              <div className="absolute inset-x-0 bottom-0 h-[44%] overflow-hidden">
+              <div className="absolute inset-x-0 bottom-0 h-[34%] overflow-hidden lg:bottom-[-120px]">
                 <Image
                   src={seasonalBackgrounds[collection.title]}
                   alt={collection.title}
@@ -75,9 +75,10 @@ export default function Shop() {
               <div className="absolute inset-0 bg-black/35" />
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_48%,rgba(0,0,0,0.45)_100%)]" />
               <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(235,179,124,0.12)_0%,rgba(235,179,124,0)_38%,rgba(15,11,8,0.22)_100%)]" />
-              <div className="pointer-events-none absolute bottom-[34%] left-1/2 h-10 w-44 -translate-x-1/2 rounded-full bg-black/45 blur-xl transition-all duration-[250ms] ease-out group-hover:bg-black/55" />
+              <div className="pointer-events-none absolute bottom-[40%] left-1/2 h-10 w-44 -translate-x-1/2 rounded-full bg-black/45 blur-xl transition-all duration-[250ms] ease-out group-hover:bg-black/55" />
+              <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-b from-black/30 via-black/80 to-black" />
 
-              <div className="absolute inset-0 z-10 flex items-end">
+              <div className="absolute inset-x-0 bottom-0 z-10">
                 <div className="w-full p-6 md:p-8">
                   <p className="text-[10px] uppercase tracking-[0.34em] text-white/75">{collection.seasonLabel}</p>
                   <h3 className="mt-3 font-serif text-4xl leading-tight text-white md:text-5xl">{collection.title}</h3>

@@ -94,14 +94,17 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
-
-            <Link href="/cart" className="transition text-white/80 hover:text-white">
-              CART
-              <span className="ml-3 border border-white/40 bg-white/95 px-2 py-1 text-[10px] font-bold text-black md:text-xs">
-                {cart.length}
-              </span>
-            </Link>
           </nav>
+
+          <Link
+            href="/cart"
+            className="absolute right-8 top-1/2 hidden -translate-y-1/2 text-[11px] uppercase tracking-[0.34em] text-white/80 transition hover:text-white md:inline-flex md:items-center"
+          >
+            CART
+            <span className="ml-3 border border-white/40 bg-white/95 px-2 py-1 text-[10px] font-bold text-black md:text-xs">
+              {cart.length}
+            </span>
+          </Link>
         </div>
       </header>
 
