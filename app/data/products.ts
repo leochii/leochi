@@ -73,7 +73,7 @@ export const products: Product[] = [
         color: "White",
         images: [
           "/Isfahan-white-front-male-street.jpg",
-          "/Isfahan-white-back-male-street.jpg",
+          "/isfahan-white-back-male-street.jpg",
         ],
       },
       {
