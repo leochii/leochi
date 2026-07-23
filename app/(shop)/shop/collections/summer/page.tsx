@@ -30,7 +30,49 @@ export default function SummerCollectionPage() {
         <h1 className="mt-4 font-serif text-4xl md:text-5xl">Summer Collection</h1>
         <p className="mt-4 text-white/70">3 ITEMS • Summer 2026</p>
 
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 space-y-6 md:hidden">
+          {items.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className="group block overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a]"
+            >
+              <div className="relative h-[420px] w-full overflow-hidden">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  fill
+                  sizes="100vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                />
+                <div className="absolute inset-0 bg-black/28" />
+              </div>
+
+              <div className="space-y-4 px-5 py-5">
+                <h2 className="font-serif text-[2rem] leading-[1.03] text-white">{item.name}</h2>
+
+                <div className="flex items-center gap-2">
+                  {item.variants.map((variant) => (
+                    <span
+                      key={`${item.name}-${variant}-mobile`}
+                      className={`h-3.5 w-3.5 rounded-full ${
+                        variant === "White" ? "border border-white/30 bg-black" : "bg-white"
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <p className="text-[11px] uppercase tracking-[0.24em] text-white/70">SIZES: S M L XL</p>
+
+                <span className="inline-flex items-center border-b border-white/70 pb-1 text-[11px] uppercase tracking-[0.24em] text-white transition duration-500 group-hover:text-white/80">
+                  View Product -&gt;
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-12 hidden grid-cols-1 gap-5 md:grid md:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
             <Link
               key={item.name}

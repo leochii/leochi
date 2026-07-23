@@ -30,9 +30,32 @@ function InstagramIcon() {
 
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-white/8 bg-black text-white">
-      <div className="mx-auto max-w-7xl px-6 pt-[100px] pb-20 md:px-10 md:py-12">
-        <div className="flex flex-col items-center gap-8 text-center md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-6 md:text-left">
+    <footer className="border-t border-white/8 bg-[#0a0a0a] text-white">
+      <div className="mx-auto max-w-7xl px-6 pb-16 pt-14 md:hidden">
+        <p className="font-serif text-[1.7rem] leading-[1.18] text-white">
+          Crafted with meaning.
+          <br />
+          Worn with pride.
+        </p>
+
+        <div className="mt-10 border-t border-white/12 pt-8">
+          <h2 className="font-serif text-2xl tracking-[0.08em] text-[#fff7ed]">LEOCHI</h2>
+
+          <div className="mt-6 grid grid-cols-2 gap-y-4 text-[11px] uppercase tracking-[0.25em] text-white/80">
+            <a href="/shop" className="transition hover:text-white">Shop</a>
+            <a href="/custom-printing" className="transition hover:text-white">Studio</a>
+            <a href="/about" className="transition hover:text-white">About</a>
+            <a href="mailto:support@leochi.co" className="transition hover:text-white">Contact</a>
+            <a href={instagramHref} target="_blank" rel="noreferrer" className="transition hover:text-white">Instagram</a>
+            <a href="https://www.pinterest.com/" target="_blank" rel="noreferrer" className="transition hover:text-white">Pinterest</a>
+          </div>
+
+          <p className="mt-10 text-[11px] text-white/45">© 2026 LEOCHI. All Rights Reserved.</p>
+        </div>
+      </div>
+
+      <div className="mx-auto hidden max-w-7xl px-6 pb-20 pt-[100px] md:block md:px-10 md:py-12">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-6 text-left">
           <div className="max-w-md">
             <h2 className="text-2xl font-serif tracking-[0.08em] text-[#fff7ed] md:text-3xl">LEOCHI</h2>
             <p className="mt-4 text-[11px] uppercase tracking-[0.34em] text-[#d2bea0]">DESIGNED IN CANADA</p>

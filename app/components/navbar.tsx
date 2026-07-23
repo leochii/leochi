@@ -47,9 +47,11 @@ export default function Navbar() {
 
   const mobileMenuItems = [
     { href: "/shop", label: "SHOP" },
+    { href: "/shop", label: "COLLECTIONS" },
     { href: "/custom-printing", label: "LEOCHI STUDIO" },
     { href: "/about", label: "ABOUT" },
     { href: "/cart", label: "CART" },
+    { href: "https://www.instagram.com/", label: "INSTAGRAM", external: true },
   ];
 
   return (
@@ -133,16 +135,32 @@ export default function Navbar() {
         </div>
 
         <nav className="flex h-[calc(100dvh-72px)] items-center justify-center px-8">
-          <div className="flex w-full max-w-md flex-col items-center justify-center gap-10">
+          <div
+            className="flex w-full max-w-md flex-col items-center justify-center gap-10 transition-all duration-500"
+            style={{ transform: isMenuOpen ? "translateY(0px)" : "translateY(24px)", opacity: isMenuOpen ? 1 : 0 }}
+          >
             {mobileMenuItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setIsMenuOpen(false)}
-                className="text-center font-serif text-[clamp(2rem,7.5vw,3.25rem)] leading-[1.05] tracking-[0.08em] text-[#f7f0e6] transition duration-300 hover:text-white"
-              >
-                {item.label}
-              </Link>
+              item.external ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-center font-serif text-[clamp(2rem,7.5vw,3.25rem)] leading-[1.05] tracking-[0.08em] text-[#f7f0e6] transition duration-300 hover:text-white"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-center font-serif text-[clamp(2rem,7.5vw,3.25rem)] leading-[1.05] tracking-[0.08em] text-[#f7f0e6] transition duration-300 hover:text-white"
+                >
+                  {item.label}
+                </Link>
+              )
             ))}
           </div>
         </nav>
