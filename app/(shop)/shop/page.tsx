@@ -43,24 +43,39 @@ export default function Shop() {
 
   return (
     <main className="min-h-screen bg-black px-6 pb-20 pt-28 text-white md:px-10 md:pt-32 lg:px-14">
-      <section className="mx-auto mt-20 max-w-[1800px] md:mt-24">
+      <section className="mx-auto max-w-[1800px]">
         <h2 className="text-center font-serif text-3xl text-white md:text-4xl">SEASONAL COLLECTIONS</h2>
 
-        <div className="mt-10 grid grid-cols-1 gap-0 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-6 grid grid-cols-1 gap-0 sm:grid-cols-2 lg:grid-cols-4">
           {collections.map((collection) => (
             <article
               key={collection.title}
-              className="group relative h-[750px] overflow-hidden border border-white/[0.08] sm:h-[780px] lg:h-[820px]"
+              className="group relative h-[750px] overflow-hidden border border-white/[0.08] transition-all duration-[250ms] ease-out hover:shadow-[0_0_26px_rgba(201,158,98,0.28)] sm:h-[780px] lg:h-[820px]"
             >
-              <Image
-                src={seasonalBackgrounds[collection.title]}
-                alt={collection.title}
-                fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-              />
+              <div className="absolute inset-x-0 top-0 h-[56%] overflow-hidden">
+                <Image
+                  src={seasonalBackgrounds[collection.title]}
+                  alt={collection.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="object-cover object-top contrast-[1.08] saturate-[1.03] transition-transform duration-[250ms] ease-out group-hover:translate-y-[6px]"
+                />
+              </div>
+
+              <div className="absolute inset-x-0 bottom-0 h-[44%] overflow-hidden">
+                <Image
+                  src={seasonalBackgrounds[collection.title]}
+                  alt={collection.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="object-cover object-bottom contrast-[1.08] saturate-[1.03] transition-transform duration-[250ms] ease-out group-hover:scale-[1.02]"
+                />
+              </div>
 
               <div className="absolute inset-0 bg-black/35" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_48%,rgba(0,0,0,0.45)_100%)]" />
+              <div className="absolute inset-0 bg-[linear-gradient(160deg,rgba(235,179,124,0.12)_0%,rgba(235,179,124,0)_38%,rgba(15,11,8,0.22)_100%)]" />
+              <div className="pointer-events-none absolute bottom-[34%] left-1/2 h-10 w-44 -translate-x-1/2 rounded-full bg-black/45 blur-xl transition-all duration-[250ms] ease-out group-hover:bg-black/55" />
 
               <div className="absolute inset-0 z-10 flex items-end">
                 <div className="w-full p-6 md:p-8">
@@ -74,7 +89,7 @@ export default function Shop() {
                   {collection.available && collection.href ? (
                     <Link
                       href={collection.href}
-                      className="mt-6 inline-flex h-11 items-center justify-center border border-white/85 px-7 text-[10px] uppercase tracking-[0.3em] text-white transition hover:bg-white hover:text-black"
+                      className="mt-6 inline-flex h-11 items-center justify-center border border-white/85 px-7 text-[10px] uppercase tracking-[0.3em] text-white transition-all duration-[250ms] ease-out hover:bg-white hover:text-black group-hover:border-white group-hover:bg-white group-hover:text-black"
                     >
                       Explore
                     </Link>

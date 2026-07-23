@@ -62,10 +62,10 @@ export default function Navbar() {
         }`}
         style={{ zIndex: 100 }}
       >
-        <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-5 md:h-20 md:px-8">
+        <div className="relative mx-auto h-[72px] max-w-7xl px-5 md:h-20 md:px-8">
           <Link
             href="/"
-            className="text-2xl text-white md:text-3xl"
+            className="absolute left-5 top-1/2 -translate-y-1/2 text-2xl text-white md:left-8 md:text-3xl"
             style={{ fontFamily: '"Iowan Old Style", "Bodoni 72", "Times New Roman", serif' }}
           >
             LEOCHI
@@ -74,7 +74,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setIsMenuOpen((open) => !open)}
-            className="text-xs uppercase tracking-[0.28em] text-white transition hover:text-neutral-300 md:hidden"
+            className="absolute right-5 top-1/2 -translate-y-1/2 text-xs uppercase tracking-[0.28em] text-white transition hover:text-neutral-300 md:hidden"
             aria-label="Toggle mobile menu"
             aria-expanded={isMenuOpen}
           >
@@ -82,7 +82,7 @@ export default function Navbar() {
           </button>
 
           <nav
-            className="hidden items-center gap-4 text-[9px] uppercase text-white md:flex md:gap-14 md:text-[11px]"
+            className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-4 text-[9px] uppercase text-white md:flex md:gap-14 md:text-[11px]"
             style={{ letterSpacing: "0.34em" }}
           >
             {navItems.map((item) => (
