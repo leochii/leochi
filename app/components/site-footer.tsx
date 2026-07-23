@@ -32,29 +32,10 @@ export default function SiteFooter() {
   return (
     <footer className="border-t border-white/8 bg-[#0a0a0a] text-white">
       <div className="mx-auto max-w-7xl px-6 pb-16 pt-14 md:hidden">
-        <p className="font-serif text-[1.7rem] leading-[1.18] text-white">
-          Crafted with meaning.
-          <br />
-          Worn with pride.
-        </p>
-
-        <div className="mt-10 border-t border-white/12 pt-8">
+        <div className="pt-2">
           <h2 className="font-serif text-2xl tracking-[0.08em] text-[#fff7ed]">LEOCHI</h2>
 
-          <div className="mt-6 grid grid-cols-2 gap-y-4 text-[11px] uppercase tracking-[0.25em] text-white/80">
-            <a href="/shop" className="transition hover:text-white">Shop</a>
-            <a href="/custom-printing" className="transition hover:text-white">Studio</a>
-            <a href="/about" className="transition hover:text-white">About</a>
-          </div>
-
           <div className="mt-8 flex items-center justify-center gap-4">
-            <a
-              href="mailto:support@leochi.co"
-              aria-label="Email LEOCHI"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white text-white transition-opacity duration-300 hover:opacity-70"
-            >
-              <EmailIcon />
-            </a>
             <a
               href={facebookHref}
               target="_blank"
@@ -63,6 +44,13 @@ export default function SiteFooter() {
               className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white text-white transition-opacity duration-300 hover:opacity-70"
             >
               <FacebookIcon />
+            </a>
+            <a
+              href="mailto:support@leochi.co"
+              aria-label="Email LEOCHI"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white text-white transition-opacity duration-300 hover:opacity-70"
+            >
+              <EmailIcon />
             </a>
           </div>
 
